@@ -1,0 +1,24 @@
+``` IX-05 | Volume and Index Caps Forcing Premature Cold-to-Frozen
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Compare configured retention to actual retention for every index
+    on every peer to find indexes whose size or volume caps are cutting data
+    off early.
+    Run on: SH with all indexers as search peers (splunk_server=* fans the
+    REST call out to them).
+    Query: Main query
+```
+| rest splunk_server=* /services/data/indexes datatype=all count=0
+| search disabled=0 NOT title=_*
+| eval cfg_retention_d=round(frozenTimePeriodInSecs / 86400, 0)
+| eval oldest_t=strptime(minTime, "%Y-%m-%dT%H:%M:%S%z")
+| eval actual_retention_d=round((now() - oldest_t) / 86400, 1)
+| eval size_pct=round(100 * currentDBSizeMB / maxTotalDataSizeMB, 1)
+| stats max(cfg_retention_d) as cfg_retention_d
+        min(actual_retention_d) as actual_retention_d_min
+        max(size_pct) as size_pct_max
+        values(homePath) as home_path values(coldPath) as cold_path
+        by title
+| eval retention_gap_d=cfg_retention_d - actual_retention_d_min
+| where size_pct_max > 90 OR retention_gap_d > 7
+| sort - retention_gap_d

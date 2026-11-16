@@ -1,0 +1,15 @@
+``` CL-08 | Flapping Peer: Up → Pending → Up Cycling
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A peer repeatedly cycles between Up, Pending, and Down;
+    correlate the transitions with heartbeat loss or host resource exhaustion.
+    Run on: SH.
+    Query: Host pressure on the flapping peer (substitute the peer hostname)
+    Replace any <angle-bracket> placeholders before running.
+```
+index=_introspection sourcetype=splunk_resource_usage component=Hostwide
+    host=<peer_host> earliest=-24h
+| eval cpu_pct='data.cpu_system_pct'+'data.cpu_user_pct',
+       mem_pct=round(100*'data.mem_used'/'data.mem',1)
+| timechart span=5m max(cpu_pct) as cpu_pct max(mem_pct) as mem_pct
+    max(data.normalized_load_avg_1min) as load_1m

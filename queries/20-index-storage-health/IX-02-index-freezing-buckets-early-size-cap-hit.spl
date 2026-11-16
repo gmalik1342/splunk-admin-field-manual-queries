@@ -1,0 +1,26 @@
+``` IX-02 | Index Freezing Buckets Early: Size Cap Hit Before Retention
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Users report data missing well inside the documented retention
+    window; confirm whether an index is freezing buckets because it hit
+    maxTotalDataSizeMB instead of aging out on frozenTimePeriodInSecs.
+    Run on: SH.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd component=BucketMover
+    "will attempt to freeze" earliest=-7d
+| rex field=_raw "candidate='(?<bucket_path>[^']+)'"
+| rex field=bucket_path "/(?<idx_dir>[^/]+)/(?:db|colddb)/(?<bucket_dir>[^/]+)$"
+| rex field=bucket_dir "^(?:db|rb)_(?<latest_t>\d+)_(?<earliest_t>\d+)_"
+| eval freeze_reason=case(
+    match(_raw, "frozenTimePeriodInSecs"),  "AGE (expected)",
+    match(_raw, "maxVolumeDataSizeMB"),     "VOLUME CAP",
+    match(_raw, "maxTotalDataSizeMB"),      "INDEX SIZE CAP",
+    true(),                                 "OTHER")
+| eval bucket_age_days=round((_time - latest_t) / 86400, 1)
+| stats count as buckets_frozen
+        min(bucket_age_days) as youngest_frozen_days
+        median(bucket_age_days) as median_frozen_days
+        by idx_dir freeze_reason
+| sort freeze_reason - buckets_frozen

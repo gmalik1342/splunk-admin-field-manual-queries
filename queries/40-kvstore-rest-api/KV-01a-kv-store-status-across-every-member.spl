@@ -1,0 +1,21 @@
+``` KV-01 | KV Store Status Across Every Member
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Lookups backed by the KV Store return nothing, apps show KV
+    Store errors, or the bulletin board says the KV Store is not ready; check
+    status on every search head and flag any member not in ready.
+    Run on: SH-local (or splunk_server=* across the SHC) for current state, SH
+    for the history.
+    Query: Main query
+```
+| rest splunk_server=* /services/kvstore/status count=0
+| rename current.status as status,
+         current.replicationStatus as replication_status,
+         current.storageEngine as storage_engine,
+         current.backupRestoreStatus as backup_restore,
+         current.disabled as disabled,
+         current.port as port
+| eval healthy=if(status="ready", "yes", "NO")
+| table splunk_server healthy status replication_status storage_engine port
+        disabled backup_restore
+| sort healthy splunk_server

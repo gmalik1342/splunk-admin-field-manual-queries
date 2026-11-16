@@ -1,0 +1,20 @@
+``` IX-12 | Corrupt Buckets, tsidx Errors, and Failed Rebuilds
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Searches return errors about unreadable buckets or tsidx files,
+    or a thawed bucket failed to rebuild; list every corrupt bucket by peer
+    and index so they can be repaired with fsck.
+    Run on: SH with all indexers as search peers. dbinspect corruptonly=true
+    checks bucket metadata on each peer and returns only the buckets it flags.
+    Query: Error trail behind the corruption (SH)
+```
+index=_internal sourcetype=splunkd earliest=-7d (log_level=ERROR OR log_level=WARN)
+    ("corrupt" OR "tsidx" OR "rebuild" OR "fsck" OR "bucket is unusable")
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| rex field=_raw "(?<bucket_ref>(?:db|rb)_\d+_\d+_\d+(?:_[0-9A-F-]+)?)"
+| eval msg_sig=replace(replace(msg, "(?:db|rb)_\S+", "BUCKET"), "\d+", "N")
+| stats count dc(bucket_ref) as buckets values(bucket_ref) as sample_buckets
+        latest(_time) as last_seen by host component msg_sig
+| eval sample_buckets=mvindex(sample_buckets, 0, 4)
+| convert ctime(last_seen)
+| sort - buckets

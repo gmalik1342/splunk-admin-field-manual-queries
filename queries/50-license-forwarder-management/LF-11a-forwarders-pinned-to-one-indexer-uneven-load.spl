@@ -1,0 +1,26 @@
+``` LF-11 | Forwarders Pinned to One Indexer: Uneven Load Balancing
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Some indexers are much busier than others or fill their disks
+    first; measure how evenly forwarder traffic spreads across the indexers
+    and find forwarders that stick to a single indexer.
+    Run on: SH. host is the receiving indexer; fwd is the forwarder.
+    Query: Main query
+```
+index=_internal source=*metrics.log group=tcpin_connections earliest=-4h
+| eval fwd=coalesce(hostname, sourceHost, sourceIp)
+| stats sum(kb) as kb by host fwd
+| eventstats sum(kb) as fwd_kb dc(host) as indexers_used by fwd
+| eventstats dc(host) as indexers_total
+| eval top_share=round(100 * kb / fwd_kb, 1)
+| stats max(top_share) as max_share_pct max(indexers_used) as indexers_used
+        max(indexers_total) as indexers_total
+        sum(kb) as kb
+        by fwd
+| eval gb=round(kb / 1024 / 1024, 2),
+       pattern=case(indexers_used=1, "PINNED (1 indexer)",
+                    max_share_pct >= 70, "SKEWED (>=70% to one)",
+                    true(), "balanced")
+| where pattern!="balanced"
+| sort - gb
+| table fwd gb indexers_used indexers_total max_share_pct pattern

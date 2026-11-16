@@ -1,0 +1,31 @@
+``` KV-11 | HTTP Event Collector Failures
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Senders report HEC errors or data from HEC stops arriving; break
+    down HEC failures by reply code, token, and source IP to see whether the
+    problem is the token, the data, or the indexers.
+    Run on: SH, against the _internal of the HEC receivers (indexers or heavy
+    forwarders behind the load balancer).
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd component=HttpInputDataHandler earliest=-4h
+| rex field=_raw "\breply=(?<reply>\d+)"
+| rex field=_raw "token name=(?<token_name>[^,]+)"
+| rex field=_raw "source_IP=(?<src_ip>[^,\s]+)"
+| rex field=_raw "events_processed=(?<events>\d+)"
+| eval reason=case(
+    reply=1,  "1 token disabled",          reply=2,  "2 token required",
+    reply=3,  "3 invalid authorization",   reply=4,  "4 invalid token",
+    reply=5,  "5 no data",                 reply=6,  "6 invalid data format",
+    reply=7,  "7 incorrect index",         reply=8,  "8 internal server error",
+    reply=9,  "9 server busy",             reply=10, "10 data channel missing",
+    reply=11, "11 invalid data channel",   reply=12, "12 event field required",
+    reply=13, "13 event field blank",      reply=14, "14 ACK disabled",
+    true(),   reply . " other")
+| stats count as failures dc(src_ip) as senders values(src_ip) as sample_senders
+        latest(_time) as last_seen
+        by host token_name reason
+| eval sample_senders=mvindex(sample_senders, 0, 4)
+| convert ctime(last_seen)
+| sort - failures

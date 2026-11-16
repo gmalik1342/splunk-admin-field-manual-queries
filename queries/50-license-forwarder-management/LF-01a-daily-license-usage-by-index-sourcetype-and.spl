@@ -1,0 +1,26 @@
+``` LF-01 | Daily License Usage by Index, Sourcetype, and Host vs. Quota
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Report daily license consumption against the pool quota and
+    identify which indexes, sourcetypes, and hosts account for it.
+    Run on: SH for usage, LM for the | rest quota join. If the join returns no
+    quota_gb, the search head cannot reach the LM's REST endpoints. Run on the
+    LM instead.
+    Query: Main query
+```
+index=_internal source=*license_usage.log* type=Usage earliest=-30d@d latest=@d
+| bin _time span=1d
+| stats sum(b) as bytes by _time pool idx
+| eventstats sum(bytes) as pool_bytes by _time pool
+| eval gb=round(bytes / 1024 / 1024 / 1024, 2),
+       pct_of_day=round(100 * bytes / pool_bytes, 1)
+| join type=left pool
+    [| rest splunk_server=local /services/licenser/pools count=0
+     | eval quota_gb=round(effective_quota / 1024 / 1024 / 1024, 1)
+     | rename title as pool
+     | fields pool quota_gb]
+| eval pool_gb=round(pool_bytes / 1024 / 1024 / 1024, 2),
+       pct_of_quota=round(100 * pool_gb / quota_gb, 1)
+| where pct_of_day >= 2
+| table _time pool pool_gb quota_gb pct_of_quota idx gb pct_of_day
+| sort 0 - _time - gb

@@ -1,0 +1,11 @@
+``` CL-03 | Search Factor / Replication Factor Not Met: Which Buckets, Which Peers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The cluster manager reports Search Factor or Replication Factor
+    Not Met; identify the affected indexes and the peers that originated the
+    under-replicated buckets.
+    Run on: CM.
+    Query: Cluster-wide flags (CM)
+```
+| rest splunk_server=local /services/cluster/master/health
+| table replication_factor search_factor all_peers_are_up all_data_is_searchable

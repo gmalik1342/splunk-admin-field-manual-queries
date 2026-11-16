@@ -1,0 +1,28 @@
+``` SR-12 | Slow or Failing Knowledge Bundle Replication to Peers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Searches return stale field extractions or warn that peers have
+    an out-of-date bundle; measure how long knowledge bundle replication
+    takes, how large the bundle is, and which peers are failing.
+    Run on: SH. host is the search head replicating its bundle.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    (component=DistributedBundleReplicationManager
+     OR component=BundleReplicationProvider OR component=DistributedPeerManager)
+    ("bundle" OR "replication")
+| rex field=_raw "\belapsed_ms=(?<elapsed_ms>\d+)"
+| rex field=_raw "\btar_elapsed_ms=(?<tar_ms>\d+)"
+| rex field=_raw "\bbundle_file_size=(?<bundle_kb>\d+)"
+| rex field=_raw "(?i)peer[_ ]?(?:name|uri)?[=:\s]+\"?(?<peer>[\w.:-]+)"
+| eval failed=if(log_level="ERROR" OR match(_raw, "(?i)fail"), 1, 0)
+| stats count as events sum(failed) as failures
+        median(elapsed_ms) as median_ms max(elapsed_ms) as max_ms
+        median(tar_ms) as median_tar_ms
+        max(bundle_kb) as max_bundle_kb values(peer) as peers_failing
+        by host
+| eval max_bundle_mb=round(max_bundle_kb / 1024, 1),
+       peers_failing=if(failures > 0, peers_failing, null())
+| table host events failures median_ms max_ms median_tar_ms max_bundle_mb
+        peers_failing

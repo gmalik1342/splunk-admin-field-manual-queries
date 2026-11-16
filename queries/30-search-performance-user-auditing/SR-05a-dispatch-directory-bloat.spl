@@ -1,0 +1,19 @@
+``` SR-05 | Dispatch Directory Bloat
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The dispatch directory on the search head is filling the disk or
+    holding thousands of artifacts; identify which users and saved searches
+    are leaving the largest and longest-lived artifacts.
+    Run on: SH-local for the artifact breakdown, SH for the warnings.
+    Query: Main query
+```
+| rest splunk_server=local /services/search/jobs count=0
+| eval disk_mb=diskUsage / 1024 / 1024,
+       ttl_h=round(ttl / 3600, 1),
+       kind=case(isSavedSearch=1, "scheduled", like(sid, "rt_%"), "realtime",
+                 true(), "ad-hoc")
+| stats count as artifacts round(sum(disk_mb), 1) as total_mb
+        round(max(disk_mb), 1) as largest_mb max(ttl_h) as max_ttl_h
+        by author kind label
+| sort - total_mb
+| head 25

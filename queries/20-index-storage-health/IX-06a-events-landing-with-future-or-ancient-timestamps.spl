@@ -1,0 +1,27 @@
+``` IX-06 | Events Landing With Future or Ancient Timestamps
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Searches over "last 24 hours" miss data, or bucket roll storms
+    appear on an index; locate the sources, hosts, and sourcetypes producing
+    unparseable or out-of-window timestamps.
+    Run on: SH. Parsing happens on the first full Splunk instance in the path,
+    so DateParserVerbose lines come from heavy forwarders or indexers, not
+    universal forwarders.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd component=DateParserVerbose earliest=-24h
+| rex field=_raw
+    "source::(?<d_source>[^|]+)\|host::(?<d_host>[^|]+)\|(?<d_st>[^|]+)\|"
+| eval data_sourcetype=coalesce(data_sourcetype, d_st),
+       data_host=coalesce(data_host, d_host),
+       data_source=coalesce(data_source, d_source)
+| eval issue=case(
+    match(_raw, "Failed to parse timestamp"),            "NO TIMESTAMP FOUND",
+    match(_raw, "outside of the acceptable time window"),"OUT OF WINDOW",
+    match(_raw, "too far away from the previous"),       "JUMP VS PREV EVENT",
+    match(_raw, "suspiciously far away"),                "SUSPICIOUS JUMP",
+    true(),                                              "OTHER")
+| stats count dc(data_host) as hosts values(data_source) as sample_sources
+        by data_sourcetype issue
+| eval sample_sources=mvindex(sample_sources, 0, 2)
+| sort - count

@@ -1,0 +1,14 @@
+``` CL-01 | Rolling Restart: Started, In Progress, or Finished
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Check if a cluster rolling restart has started, is currently in
+    progress, or has finished, including the user who triggered it.
+    Run on: SH for the timeline, CM for the confirmation. The CM's _internal
+    must be forwarded to the indexers, or the CMMaster and CMPeer lines will
+    be missing.
+    Query: Current-state confirmation (CM)
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+| rest splunk_server=local /services/cluster/master/info
+| table label rolling_restart_flag maintenance_mode service_ready_flag
+    indexing_ready_flag

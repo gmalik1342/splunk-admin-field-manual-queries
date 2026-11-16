@@ -1,0 +1,17 @@
+``` CL-02 | Which Peer Dropped During a Network Partition
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Identify which peer node dropped out of the cluster during a
+    network partition, and the exact second the cluster manager marked it
+    Down.
+    Run on: SH for the transition history, CM for live heartbeat state.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-4h
+| rex field=_raw "peer_name=(?<peer_name>\S+)"
+| rex field=_raw "from=(?<from_state>\w+)\s+to=(?<to_state>\w+)"
+| rex field=_raw "reason=\"(?<reason>[^\"]+)\""
+| where to_state="Down" OR from_state="Down"
+| eval transition=from_state." -> ".to_state
+| table _time host peer_name transition reason
+| sort 0 _time

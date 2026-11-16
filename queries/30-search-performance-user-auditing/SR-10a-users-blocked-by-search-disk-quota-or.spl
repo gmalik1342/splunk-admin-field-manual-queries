@@ -1,0 +1,23 @@
+``` SR-10 | Users Blocked by Search Disk Quota or Concurrency Limits
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Users report searches refusing to run with quota errors;
+    identify which users are hitting srchDiskQuota or srchJobsQuota and how
+    much of the quota they are using.
+    Run on: SH, and SH-local for current disk use.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal earliest=-24h
+    ("disk usage quota" OR "srchDiskQuota" OR "concurrent searches"
+     OR "srchJobsQuota" OR "maximum number of concurrent")
+    (sourcetype=splunkd OR sourcetype=scheduler
+     OR sourcetype=splunk_search_messages)
+| rex field=_raw "(?i)user[=:\s]+\"?(?<quota_user>[\w.@-]+)"
+| eval quota_user=coalesce(quota_user, user),
+       quota=case(match(_raw, "(?i)disk"), "DISK (srchDiskQuota)",
+                  match(_raw, "(?i)role|user"), "USER/ROLE JOBS (srchJobsQuota)",
+                  true(), "INSTANCE CONCURRENCY")
+| stats count as blocked latest(_time) as last_blocked by quota_user quota
+| convert ctime(last_blocked)
+| sort - blocked

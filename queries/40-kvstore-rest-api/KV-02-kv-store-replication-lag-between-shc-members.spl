@@ -1,0 +1,27 @@
+``` KV-02 | KV Store Replication Lag Between SHC Members
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: KV Store-backed lookups return different results depending on
+    which search head serves the request; measure replication lag across the
+    SHC replica set and identify the stale member.
+    Run on: SH, with _introspection from every SHC member. The KV Store
+    replica set stats are sampled on each member.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_introspection sourcetype=kvstore component=KVStoreReplicaSetStats
+    earliest=-1h
+| spath path=data.members{} output=member
+| mvexpand member
+| spath input=member path=name output=member_name
+| spath input=member path=stateStr output=state
+| spath input=member path=optimeDate output=optime_raw
+| eval optime=coalesce(strptime(optime_raw, "%Y-%m-%dT%H:%M:%S.%3N%Z"),
+                       tonumber(optime_raw) / 1000)
+| eventstats max(eval(if(state="PRIMARY", optime, null()))) as primary_optime
+        by _time host
+| eval lag_s=round(primary_optime - optime, 1)
+| stats latest(state) as state max(lag_s) as max_lag_s avg(lag_s) as avg_lag_s
+        by member_name
+| eval avg_lag_s=round(avg_lag_s, 1)
+| sort - max_lag_s

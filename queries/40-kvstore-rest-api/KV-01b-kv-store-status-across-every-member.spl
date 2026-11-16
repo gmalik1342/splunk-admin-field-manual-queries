@@ -1,0 +1,19 @@
+``` KV-01 | KV Store Status Across Every Member
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Lookups backed by the KV Store return nothing, apps show KV
+    Store errors, or the bulletin board says the KV Store is not ready; check
+    status on every search head and flag any member not in ready.
+    Run on: SH-local (or splunk_server=* across the SHC) for current state, SH
+    for the history.
+    Query: Status changes over the last week (SH)
+```
+index=_internal sourcetype=splunkd earliest=-7d
+    (component=KVStore* OR component=KVStorage*)
+    ("status" OR "failed" OR "Failed")
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval msg_sig=replace(msg, "\d+", "N")
+| stats count earliest(_time) as first_seen latest(_time) as last_seen
+        by host component log_level msg_sig
+| convert ctime(first_seen) ctime(last_seen)
+| sort - last_seen

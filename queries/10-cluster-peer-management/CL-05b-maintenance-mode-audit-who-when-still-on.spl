@@ -1,0 +1,11 @@
+``` CL-05 | Maintenance Mode Audit: Who, When, Still On?
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Audit who enabled cluster maintenance mode, when it was set, and
+    whether it was left on after the change window closed.
+    Run on: SH for the history, CM for the current state.
+    Query: Current state (CM)
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+| rest splunk_server=local /services/cluster/master/info
+| table label maintenance_mode rolling_restart_flag

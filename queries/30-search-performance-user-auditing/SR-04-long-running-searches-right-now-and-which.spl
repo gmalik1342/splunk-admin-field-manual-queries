@@ -1,0 +1,19 @@
+``` SR-04 | Long-Running Searches Right Now, and Which to Kill
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The cluster is slow at this moment; list every search currently
+    running, how long it has been running, who owns it, and what it is
+    scanning, so the right sid can be cancelled.
+    Run on: SH-local. This shows only jobs dispatched from the search head you
+    are logged into.
+    Query: Main query
+```
+| rest splunk_server=local /services/search/jobs count=0
+| search dispatchState=RUNNING OR dispatchState=FINALIZING
+| eval run_min=round(runDuration / 60, 1),
+       disk_mb=round(diskUsage / 1024 / 1024, 1),
+       app='eai:acl.app',
+       spl=substr(title, 1, 120)
+| table sid author app label isSavedSearch run_min scanCount eventCount
+        disk_mb earliestTime latestTime spl
+| sort - run_min

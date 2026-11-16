@@ -1,0 +1,24 @@
+``` CL-03 | Search Factor / Replication Factor Not Met: Which Buckets, Which Peers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The cluster manager reports Search Factor or Replication Factor
+    Not Met; identify the affected indexes and the peers that originated the
+    under-replicated buckets.
+    Run on: CM.
+    Query: Main query
+```
+| rest splunk_server=local /services/cluster/master/fixup level=search_factor
+| eval fixup_level="search_factor"
+| append [| rest splunk_server=local
+              /services/cluster/master/fixup level=replication_factor
+          | eval fixup_level="replication_factor"]
+| rename title as bucket_id, "latest.reason" as latest_reason
+| eval index=mvindex(split(bucket_id,"~"),0),
+       origin_guid=mvindex(split(bucket_id,"~"),2)
+| join type=left origin_guid
+    [| rest splunk_server=local /services/cluster/master/peers
+     | rename title as origin_guid, label as origin_peer, site as origin_site
+     | fields origin_guid origin_peer origin_site status]
+| stats count as buckets_pending values(latest_reason) as reasons
+        by fixup_level index origin_peer origin_site status
+| sort - buckets_pending

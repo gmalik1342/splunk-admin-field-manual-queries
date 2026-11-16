@@ -1,0 +1,22 @@
+``` IX-03 | Hot Bucket Roll Storm
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: An index is producing thousands of tiny warm buckets, bucket
+    counts are exploding, and search performance on that index is collapsing;
+    identify the roll reason.
+    Run on: SH.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd component=HotBucketRoller
+    "finished moving hot to warm" earliest=-24h
+| rex field=_raw "\bidx=(?<idx>\S+)"
+| rex field=_raw "\bcaller=(?<caller>\S+)"
+| rex field=_raw "\bsize=(?<size_bytes>\d+)"
+| eval size_mb=round(size_bytes / 1024 / 1024, 1)
+| stats count as rolls
+        median(size_mb) as median_mb
+        perc10(size_mb) as p10_mb
+        dc(host) as peers
+        by idx caller
+| eval rolls_per_peer_hr=round(rolls / peers / 24, 1)
+| sort - rolls

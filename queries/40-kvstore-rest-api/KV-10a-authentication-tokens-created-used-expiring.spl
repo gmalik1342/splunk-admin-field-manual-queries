@@ -1,0 +1,29 @@
+``` KV-10 | Authentication Tokens: Created, Used, Expiring
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Audit Splunk authentication tokens: who created them, which are
+    unused or never expire, which belong to disabled users, and when each was
+    last used.
+    Run on: SH-local. Tokens are stored per instance; in an SHC they replicate
+    across members.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+| rest splunk_server=local /services/authorization/tokens count=0
+| rename claims.sub as owner, claims.aud as audience, claims.exp as exp,
+         claims.iat as iat, title as token_id
+| eval created=strftime(iat, "%F"),
+       expires=if(exp=0 OR isnull(exp), "NEVER", strftime(exp, "%F")),
+       days_left=if(exp=0 OR isnull(exp), null(), round((exp - now()) / 86400, 0)),
+       last_used_days=if(isnull(lastUsed) OR lastUsed=0, null(),
+                         round((now() - lastUsed) / 86400, 0)),
+       flag=case(status="disabled", "disabled",
+                 expires="NEVER", "NO EXPIRY",
+                 days_left < 0, "EXPIRED",
+                 days_left <= 14, "EXPIRES <=14d",
+                 isnull(last_used_days), "NEVER USED",
+                 last_used_days > 90, "UNUSED >90d",
+                 true(), "ok")
+| table owner audience token_id status created expires days_left
+        last_used_days lastUsedIp flag
+| sort flag owner

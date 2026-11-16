@@ -1,0 +1,25 @@
+``` LF-04 | Sudden Ingestion Spike: Which Host or Sourcetype
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: License usage jumped overnight; identify the hosts and
+    sourcetypes whose volume yesterday was far above their normal daily
+    volume.
+    Run on: SH.
+    Query: Main query
+```
+index=_internal source=*license_usage.log* type=Usage earliest=-8d@d latest=@d
+| bin _time span=1d
+| stats sum(b) as bytes by _time st h
+| eval is_yesterday=if(_time >= relative_time(now(), "-1d@d"), 1, 0)
+| stats sum(eval(if(is_yesterday=1, bytes, 0))) as yesterday_b
+        median(eval(if(is_yesterday=0, bytes, null()))) as baseline_b
+        by st h
+| eval yesterday_gb=round(yesterday_b / 1024 / 1024 / 1024, 2),
+       baseline_gb=round(coalesce(baseline_b, 0) / 1024 / 1024 / 1024, 2),
+       delta_gb=round(yesterday_gb - baseline_gb, 2),
+       ratio=if(baseline_b > 0, round(yesterday_b / baseline_b, 1), null()),
+       new_source=if(isnull(baseline_b), "NEW", "")
+| where delta_gb >= 1
+| sort - delta_gb
+| head 25
+| table st h baseline_gb yesterday_gb delta_gb ratio new_source

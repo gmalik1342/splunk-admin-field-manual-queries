@@ -1,0 +1,22 @@
+``` LF-12 | Forwarder Throughput Throttling and Parsing Bottlenecks
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A forwarder is falling behind on its files with no errors;
+    confirm whether it is throttled by maxKBps, and on heavy forwarders, find
+    which parsing processor is consuming the most CPU.
+    Run on: SH, with the forwarders' _internal forwarded. Replace <heavy_fwd>
+    with the forwarder's hostname.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    (component=ThruputProcessor "maxKBps")
+| stats count as throttle_warnings latest(_time) as last_seen by host
+| join type=left host
+    [search index=_internal source=*metrics.log group=thruput name=thruput
+         earliest=-24h
+     | stats avg(instantaneous_kbps) as avg_kbps
+             max(instantaneous_kbps) as max_kbps by host]
+| eval avg_kbps=round(avg_kbps, 0), max_kbps=round(max_kbps, 0)
+| convert ctime(last_seen)
+| sort - throttle_warnings
+| table host throttle_warnings avg_kbps max_kbps last_seen

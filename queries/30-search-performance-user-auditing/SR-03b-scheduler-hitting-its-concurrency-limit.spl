@@ -1,0 +1,17 @@
+``` SR-03 | Scheduler Hitting Its Concurrency Limit
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Skips are climbing and the scheduler appears saturated; measure
+    actual concurrent scheduled-search load against the limit and find the
+    long-running searches holding the slots.
+    Run on: SH. In an SHC, run against all members; each member enforces its
+    own limit.
+    Query: Slot hogs over the same window (SH)
+```
+index=_internal sourcetype=scheduler status=success earliest=-24h
+| stats count as runs sum(run_time) as total_runtime_s
+        median(run_time) as median_runtime_s max(run_time) as max_runtime_s
+        by app savedsearch_name user
+| eval slot_hours=round(total_runtime_s / 3600, 2)
+| sort - slot_hours
+| head 20

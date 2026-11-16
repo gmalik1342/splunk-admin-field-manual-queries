@@ -1,0 +1,29 @@
+``` KV-03 | Why mongod Crashed, Restarted, or Will Not Start
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The KV Store status is failed or stuck in starting after a
+    restart or upgrade; find the reason mongod exited or refused to start.
+    Run on: SH, against the _internal of the failing instance.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal earliest=-24h
+    ( (sourcetype=mongod ("E " OR "F " OR "\"s\":\"E\"" OR "\"s\":\"F\""
+                          OR "exception" OR "shutting down" OR "terminating"))
+   OR (sourcetype=splunkd (component=KVStore* OR component=KVStorage*)
+          (log_level=ERROR OR log_level=WARN)) )
+| eval cause=case(
+    match(_raw, "(?i)certificate|ssl|tls|x509"),        "1_TLS_CERTIFICATE",
+    match(_raw, "(?i)permission denied|EACCES"),        "2_FILE_PERMISSIONS",
+    match(_raw, "(?i)no space|disk full|ENOSPC"),       "3_DISK_FULL",
+    match(_raw, "(?i)mongod\.lock|unclean shutdown"),   "4_STALE_LOCK",
+    match(_raw, "(?i)featureCompatibilityVersion|upgrade|storage engine"),
+                                                        "5_VERSION_OR_ENGINE",
+    match(_raw, "(?i)address already in use|8191"),     "6_PORT_IN_USE",
+    match(_raw, "(?i)replSet|replica set|quorum"),       "7_REPLICA_SET",
+    true(),                                              "9_OTHER")
+| stats count earliest(_time) as first_seen latest(_time) as last_seen
+        values(sourcetype) as sources
+        by host cause
+| convert ctime(first_seen) ctime(last_seen)
+| sort host cause

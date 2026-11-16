@@ -1,0 +1,31 @@
+``` CL-01 | Rolling Restart: Started, In Progress, or Finished
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Check if a cluster rolling restart has started, is currently in
+    progress, or has finished, including the user who triggered it.
+    Run on: SH for the timeline, CM for the confirmation. The CM's _internal
+    must be forwarded to the indexers, or the CMMaster and CMPeer lines will
+    be missing.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal earliest=-24h
+    ( (sourcetype=splunkd_access method=POST
+        uri="*/cluster/*/control/default/restart*")
+   OR (sourcetype=splunkd component=CMMaster "rolling restart")
+   OR (sourcetype=splunkd component=CMPeer "transitioning") )
+| rex field=_raw "peer_name=(?<peer_name>\S+)"
+| rex field=_raw "from=(?<from_state>\w+)\s+to=(?<to_state>\w+)"
+| where sourcetype="splunkd_access" OR component="CMMaster"
+    OR to_state="Restarting" OR from_state="Restarting"
+| eval phase=case(
+    sourcetype="splunkd_access",                     "1_TRIGGER",
+    component="CMMaster" AND match(_raw,"(?i)start"),"2_RR_START",
+    to_state="Restarting",                           "3_PEER_DOWN_FOR_RESTART",
+    from_state="Restarting",                         "4_PEER_BACK",
+    component="CMMaster" AND match(_raw,"(?i)(finish|complet)"),
+                                                     "5_RR_COMPLETE",
+    true(),                                          "2_RR_PROGRESS")
+| eval actor=if(sourcetype="splunkd_access", user." @ ".clientip, null())
+| table _time host phase actor status peer_name from_state to_state
+| sort 0 _time

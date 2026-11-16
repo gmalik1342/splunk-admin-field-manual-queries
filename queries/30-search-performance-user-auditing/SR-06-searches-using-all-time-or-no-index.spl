@@ -1,0 +1,30 @@
+``` SR-06 | Searches Using index=*, All Time, or No Index
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The indexers are under heavy search load from unscoped queries;
+    find the users running searches with index=*, no index filter at all, or
+    an all-time range.
+    Run on: SH. info=completed events carry total_run_time and scan_count, so
+    the cost of each flagged search is in the same row.
+    Query: Main query
+```
+index=_audit sourcetype=audittrail action=search info=completed earliest=-24h
+    NOT user=splunk-system-user
+| eval spl=trim(search, "'")
+| where like(spl, "search %")
+| eval all_time=if(search_et="N/A" OR apiStartTime="'ZERO_TIME'", 1, 0),
+       wildcard_index=if(match(spl, "(?i)\bindex\s*=\s*\"?\*"), 1, 0),
+       no_index=if(NOT match(spl, "(?i)\b(index|eventtype|tag)\s*=")
+                   AND NOT match(spl, "(?i)^search\s+\|"), 1, 0)
+| where all_time=1 OR wildcard_index=1 OR no_index=1
+| eval flags=mvappend(if(all_time=1, "ALL_TIME", null()),
+                      if(wildcard_index=1, "INDEX=*", null()),
+                      if(no_index=1, "NO_INDEX", null()))
+| stats count as searches sum(total_run_time) as runtime_s
+        sum(scan_count) as events_scanned values(flags) as flags
+        latest(spl) as sample_spl
+        by user
+| eval runtime_min=round(runtime_s / 60, 1),
+       sample_spl=substr(sample_spl, 1, 100)
+| sort - runtime_s
+| table user searches runtime_min events_scanned flags sample_spl

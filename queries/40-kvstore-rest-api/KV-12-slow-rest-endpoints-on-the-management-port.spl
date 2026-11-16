@@ -1,0 +1,24 @@
+``` KV-12 | Slow REST Endpoints on the Management Port
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Splunk Web pages and REST calls are slow but searches are fine;
+    find which management-port endpoints respond slowest and which callers
+    send the most expensive requests.
+    Run on: SH, against the _internal of the slow instance.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-4h
+| rex field=_raw "\s(?<spent_ms>\d+)ms\s*$"
+| eval spent_ms=coalesce(spent, spent_ms)
+| eval uri_norm=mvindex(split(uri, "?"), 0)
+| eval uri_norm=replace(uri_norm, "/servicesNS/[^/]+/[^/]+/", "/servicesNS/-/-/")
+| eval uri_norm=replace(uri_norm, "/search/jobs/[^/]+", "/search/jobs/<sid>")
+| stats count as calls median(spent_ms) as median_ms perc95(spent_ms) as p95_ms
+        max(spent_ms) as max_ms sum(spent_ms) as total_ms
+        values(user) as callers
+        by host method uri_norm
+| where calls >= 10 AND p95_ms >= 1000
+| eval total_min=round(total_ms / 60000, 1),
+       callers=mvindex(callers, 0, 4)
+| sort - total_ms
+| head 25

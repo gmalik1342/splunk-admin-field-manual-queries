@@ -1,0 +1,25 @@
+``` KV-07 | REST API Traffic by User, Client, and Endpoint
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The management port is busy and splunkd is slow to answer;
+    profile REST API traffic to see which users, client IPs, and endpoints
+    generate the load.
+    Run on: SH, against the _internal of the busy instance (search head,
+    cluster manager, deployment server).
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-4h
+    NOT clientip=127.0.0.1 NOT user=splunk-system-user
+| eval uri_norm=mvindex(split(uri, "?"), 0)
+| eval uri_norm=replace(uri_norm, "/servicesNS/[^/]+/[^/]+/", "/servicesNS/-/-/")
+| eval uri_norm=replace(uri_norm, "/search/jobs/[^/]+", "/search/jobs/<sid>")
+| eval uri_norm=replace(uri_norm, "[0-9a-fA-F-]{36}", "<guid>")
+| rex field=_raw "\s(?<spent_ms>\d+)ms\s*$"
+| eval spent_ms=coalesce(spent, spent_ms)
+| stats count as calls sum(spent_ms) as total_ms perc95(spent_ms) as p95_ms
+        dc(uri_norm) as endpoints values(method) as methods
+        by host user clientip
+| eval calls_per_min=round(calls / 240, 1),
+       total_min=round(total_ms / 60000, 1)
+| sort - total_ms
+| head 25

@@ -1,0 +1,21 @@
+``` CL-12 | Multisite: Down Site or Cross-Site Replication Imbalance
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: In a multisite indexer cluster, confirm per-site health and
+    detect a down site or a site carrying a disproportionate share of buckets.
+    Run on: CM.
+    Query: Main query
+```
+| rest splunk_server=local /services/cluster/master/peers
+| eval up=if(status="Up",1,0), searchable=if(is_searchable="1" OR
+    is_searchable=1,1,0)
+| stats count as peers sum(up) as peers_up sum(searchable) as peers_searchable
+    sum(bucket_count) as buckets by site
+| eventstats sum(buckets) as cluster_buckets
+| eval pct_peers_up=round(100*peers_up/peers,1),
+       pct_of_buckets=round(100*buckets/cluster_buckets,1)
+| appendcols
+    [| rest splunk_server=local /services/cluster/config
+     | table site_replication_factor site_search_factor available_sites multisite]
+| table site peers peers_up pct_peers_up peers_searchable buckets pct_of_buckets
+        site_replication_factor site_search_factor available_sites

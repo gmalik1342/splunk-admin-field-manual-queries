@@ -1,0 +1,22 @@
+``` KV-08 | Spikes in REST 4xx and 5xx Responses
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Integrations report REST errors or the UI shows intermittent
+    failures; find when 4xx and 5xx responses spiked, which endpoints returned
+    them, and which clients received them.
+    Run on: SH, against the _internal of the instance returning errors.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-24h status>=400
+| eval uri_norm=mvindex(split(uri, "?"), 0)
+| eval uri_norm=replace(uri_norm, "/servicesNS/[^/]+/[^/]+/", "/servicesNS/-/-/")
+| eval uri_norm=replace(uri_norm, "/search/jobs/[^/]+", "/search/jobs/<sid>")
+| eval class=case(status=401, "401_UNAUTHORIZED", status=403, "403_FORBIDDEN",
+                  status=404, "404_NOT_FOUND", status=409, "409_CONFLICT",
+                  status>=500 AND status<600, "5XX_SERVER", true(), "4XX_OTHER")
+| stats count dc(clientip) as clients values(clientip) as sample_clients
+        values(user) as users
+        by host class uri_norm method
+| eval sample_clients=mvindex(sample_clients, 0, 4)
+| sort - count
+| head 30

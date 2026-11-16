@@ -1,0 +1,24 @@
+``` IX-01 | Bucket Replication Lag Between Peers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Replication fixups are not draining and peers report replication
+    timeouts; measure where bucket replication is failing or slow and which
+    source-to-target link is responsible.
+    Run on: SH for link errors, CM for the streaming backlog.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-4h
+    (component=BucketReplicator OR component=CMRepJob
+     OR component=CMReplicationRegistry OR component=RawdataHashMarkReader)
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "(?:ip|target_ip|peer_ip)=(?<target_ip>\d{1,3}(?:\.\d{1,3}){3})"
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval msg_sig=replace(msg, "\S+~\d+~[0-9A-F-]+", "BUCKET")
+| eval msg_sig=replace(msg_sig, "[0-9a-fA-F-]{16,}", "GUID")
+| eval msg_sig=replace(msg_sig, "\d+", "N")
+| stats count dc(msg_sig) as distinct_errors
+        values(msg_sig) as signatures latest(_time) as last_seen
+        by host target_ip
+| convert ctime(last_seen)
+| sort - count

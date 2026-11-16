@@ -1,0 +1,36 @@
+``` LF-10 | Forwarder-to-Indexer SSL and Certificate Failures
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Forwarders cannot connect to indexers after a certificate
+    change, or connections drop with TLS errors; classify SSL handshake
+    failures by cause and by the forwarders affected.
+    Run on: SH. Indexer-side errors arrive through the indexers' _internal.
+    Forwarder-side errors only arrive if the forwarder can send its logs some
+    other way, so a forwarder that cannot connect at all must be checked on
+    the box.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    (component=TcpInputProc OR component=TcpOutputFd OR component=TcpOutputProc
+     OR component=SSLCommon OR component=X509Verify)
+    ("SSL" OR "ssl" OR "certificate" OR "handshake" OR "x509")
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "src=(?<src>[\d.]+)"
+| eval side=if(component="TcpInputProc", "INDEXER (receiving)",
+               "FORWARDER (sending)")
+| eval cause=case(
+    match(_raw, "(?i)certificate (has )?expired"),       "1_CERT_EXPIRED",
+    match(_raw, "(?i)unknown ca|unable to get local"),   "2_UNKNOWN_CA",
+    match(_raw, "(?i)hostname|common name|altname"),     "3_NAME_MISMATCH",
+    match(_raw, "(?i)wrong version|unsupported proto"),  "4_TLS_VERSION",
+    match(_raw, "(?i)no shared cipher|cipher"),          "5_CIPHER",
+    match(_raw, "(?i)password|private key|PEM"),         "6_KEY_OR_PASSWORD",
+    match(_raw, "(?i)non-SSL|plain|http request"),       "7_SSL_MISMATCH",
+    true(),                                              "9_OTHER")
+| stats count dc(host) as hosts_reporting dc(src) as peers
+        values(src) as sample_peers latest(_time) as last_seen
+        by side cause
+| eval sample_peers=mvindex(sample_peers, 0, 4)
+| convert ctime(last_seen)
+| sort cause

@@ -1,0 +1,12 @@
+``` CL-06 | Cluster Bundle Push Failed or Partially Applied
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Trace a failed or partially applied apply cluster-bundle to the
+    peer that rejected it and the validation error it threw.
+    Run on: SH for the error timeline, CM for the per-peer sync state.
+    Query: Per-peer bundle sync state (CM)
+```
+| rest splunk_server=local /services/cluster/master/peers
+| eval bundle_in_sync=if(active_bundle_id==latest_bundle_id,"yes","NO")
+| table label site status active_bundle_id latest_bundle_id bundle_in_sync
+| sort bundle_in_sync label

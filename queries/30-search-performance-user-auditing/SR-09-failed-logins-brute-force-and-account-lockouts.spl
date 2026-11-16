@@ -1,0 +1,28 @@
+``` SR-09 | Failed Logins, Brute Force, and Account Lockouts
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Detect repeated failed logins against Splunk Web or the REST
+    API, distinguish password spraying from a single brute-forced account, and
+    find locked-out users.
+    Run on: SH, and every other Splunk instance that exposes 8000 or 8089
+    (deployment server, cluster manager, heavy forwarders). Each logs its own
+    _audit.
+    Query: Main query
+```
+index=_audit sourcetype=audittrail action="login attempt" earliest=-24h
+| eval src=coalesce(src, clientip),
+       outcome=if(info="succeeded", "OK", "FAIL"),
+       locked=if(match(_raw, "(?i)lock"), 1, 0)
+| stats count(eval(outcome="FAIL")) as failures
+        count(eval(outcome="OK")) as successes
+        dc(user) as users_tried values(user) as sample_users
+        max(locked) as lockout_seen
+        earliest(_time) as first_seen latest(_time) as last_seen
+        by src
+| where failures >= 10
+| eval pattern=case(users_tried >= 5, "SPRAY (many users, one source)",
+                    successes > 0, "FAILS THEN SUCCESS",
+                    true(), "BRUTE FORCE (one account)"),
+       sample_users=mvindex(sample_users, 0, 4)
+| convert ctime(first_seen) ctime(last_seen)
+| sort - failures

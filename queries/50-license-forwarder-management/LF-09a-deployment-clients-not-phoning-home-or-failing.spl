@@ -1,0 +1,23 @@
+``` LF-09 | Deployment Clients Not Phoning Home or Failing App Installs
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Configuration changes pushed from the deployment server are not
+    reaching some forwarders; find clients that have stopped phoning home and
+    clients that report errors installing deployed apps.
+    Run on: DS for the phone-home history (it is in the DS's own
+    splunkd_access). SH for client-side errors, using the forwarders'
+    _internal.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd_access uri="*/broker/phonehome/*" earliest=-7d
+| eval ph=split(mvindex(split(uri, "connection_"), 1), "_")
+| eval client_ip=mvindex(ph, 0), client_host=mvindex(ph, 2),
+       client_name=mvindex(ph, 3)
+| stats latest(_time) as last_phonehome count as phonehomes
+        latest(client_ip) as ip latest(client_name) as client_name
+        by client_host
+| eval minutes_since=round((now() - last_phonehome) / 60, 0)
+| where minutes_since >= 30
+| convert ctime(last_phonehome)
+| sort - minutes_since

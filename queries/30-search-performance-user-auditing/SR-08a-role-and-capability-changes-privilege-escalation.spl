@@ -1,0 +1,24 @@
+``` SR-08 | Role and Capability Changes: Privilege Escalation
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Identify who created or modified users and roles, and which
+    accounts currently hold capabilities that allow privilege escalation.
+    Run on: SH for the change history. SH-local for current capabilities. In
+    an SHC, user and role changes replicate, so one member's view is enough
+    for the capability list.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-30d
+    (method=POST OR method=DELETE)
+    (uri="*/authentication/users*" OR uri="*/authorization/roles*"
+     OR uri="*/admin/SAML-groups*" OR uri="*/admin/LDAP-groups*"
+     OR uri="*/authorization/tokens*")
+    NOT uri="*/authentication/users/*/acknowledge*"
+| rex field=uri "/(?<object_type>users|roles|SAML-groups|LDAP-groups|tokens)"
+| rex field=uri "(?:users|roles|groups|tokens)/(?<object>[^/?\s]+)"
+| eval object=urldecode(coalesce(object, "(new)")),
+       change=case(method="DELETE", "DELETE",
+                   object="(new)", "CREATE", true(), "MODIFY")
+| where status < 400
+| table _time host user clientip change object_type object status
+| sort 0 - _time

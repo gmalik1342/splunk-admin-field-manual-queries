@@ -1,0 +1,21 @@
+``` IX-09 | Silent Index or Sourcetype: Data Stopped Arriving
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Detect an index/sourcetype pair that normally receives data
+    every hour but has gone quiet, before a downstream alert or dashboard
+    owner notices.
+    Run on: SH. tstats reads only .tsidx metadata, so seven days across all
+    indexes returns in seconds.
+    Query: Main query
+```
+| tstats count where index=* earliest=-7d@h latest=now
+    by index sourcetype _time span=1h
+| stats count as active_hours max(_time) as last_active_hour
+        sum(count) as events_7d
+        by index sourcetype
+| eval expected_hours=7 * 24,
+       activity_pct=round(100 * active_hours / expected_hours, 1),
+       hours_silent=round((now() - last_active_hour) / 3600, 1)
+| where activity_pct >= 80 AND hours_silent >= 2
+| sort - hours_silent
+| table index sourcetype activity_pct hours_silent events_7d

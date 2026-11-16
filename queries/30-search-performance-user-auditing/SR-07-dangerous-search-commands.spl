@@ -1,0 +1,35 @@
+``` SR-07 | Dangerous Search Commands: delete, script, sendemail, outputlookup, collect, map
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Audit who ran search commands that destroy data, run code, send
+    data out of Splunk, or overwrite lookups and summary indexes.
+    Run on: SH. The join resolves each user's current roles from the search
+    head you run it on.
+    Query: Main query
+```
+index=_audit sourcetype=audittrail action=search info=granted earliest=-7d
+| eval spl=trim(search, "'")
+| rex field=spl max_match=0 "\|\s*(?<cmd>[a-z]+)"
+| eval cmd=mvfilter(in(cmd, "delete", "script", "run", "runshellscript",
+                           "sendemail", "sendalert", "outputlookup", "outputcsv",
+                           "collect", "tscollect", "map", "makeresults", "noop"))
+| where isnotnull(cmd)
+| mvexpand cmd
+| eval risk=case(
+    cmd="delete",                                  "1_DATA_DESTRUCTION",
+    cmd IN ("script", "run", "runshellscript"),    "2_CODE_EXECUTION",
+    cmd IN ("sendemail", "sendalert"),             "3_DATA_EXFIL",
+    cmd IN ("outputlookup", "outputcsv", "collect", "tscollect"), "4_DATA_WRITE",
+    cmd="map",                                     "5_FANOUT",
+    true(),                                        "6_INDICATOR")
+| stats count as uses dc(search_id) as searches values(cmd) as commands
+        latest(_time) as last_used latest(spl) as sample_spl
+        by risk user
+| join type=left user
+    [| rest splunk_server=local /services/authentication/users count=0
+     | rename title as user
+     | eval roles=mvjoin(roles, ",")
+     | fields user roles]
+| eval sample_spl=substr(sample_spl, 1, 100)
+| convert ctime(last_used)
+| sort risk - uses

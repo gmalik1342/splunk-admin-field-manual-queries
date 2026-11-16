@@ -1,0 +1,27 @@
+``` CL-04 | Fixup Backlog Stuck: Which Fixup Level Is Not Draining
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Bucket fixup tasks are piling up after a peer outage; determine
+    which fixup level is stuck and the error preventing progress.
+    Run on: CM for the counts, SH for the error signatures.
+    Query: Main query
+```
+| rest splunk_server=local /services/cluster/master/fixup level=generation
+| eval fixup_level="1_generation"
+| append [| rest splunk_server=local
+              /services/cluster/master/fixup level=streaming
+          | eval fixup_level="2_streaming"]
+| append [| rest splunk_server=local
+              /services/cluster/master/fixup level=data_safety
+          | eval fixup_level="3_data_safety"]
+| append [| rest splunk_server=local
+              /services/cluster/master/fixup level=replication_factor
+          | eval fixup_level="4_replication_factor"]
+| append [| rest splunk_server=local
+              /services/cluster/master/fixup level=search_factor
+          | eval fixup_level="5_search_factor"]
+| rename "latest.reason" as latest_reason
+| stats count as pending dc(title) as buckets
+        values(latest_reason) as sample_reasons
+        by fixup_level
+| sort fixup_level

@@ -1,0 +1,17 @@
+``` IX-06 | Events Landing With Future or Ancient Timestamps
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Searches over "last 24 hours" miss data, or bucket roll storms
+    appear on an index; locate the sources, hosts, and sourcetypes producing
+    unparseable or out-of-window timestamps.
+    Run on: SH. Parsing happens on the first full Splunk instance in the path,
+    so DateParserVerbose lines come from heavy forwarders or indexers, not
+    universal forwarders.
+    Query: Indexes already holding future-dated events
+```
+| tstats max(_time) as newest_event where index=* earliest=-1d latest=+10y
+    by index sourcetype
+| where newest_event > now() + 300
+| eval minutes_in_future=round((newest_event - now()) / 60, 0)
+| convert ctime(newest_event)
+| sort - minutes_in_future

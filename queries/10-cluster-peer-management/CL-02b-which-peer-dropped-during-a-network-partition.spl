@@ -1,0 +1,13 @@
+``` CL-02 | Which Peer Dropped During a Network Partition
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Identify which peer node dropped out of the cluster during a
+    network partition, and the exact second the cluster manager marked it
+    Down.
+    Run on: SH for the transition history, CM for live heartbeat state.
+    Query: Live heartbeat age (CM)
+```
+| rest splunk_server=local /services/cluster/master/peers
+| eval hb_age_s=now()-last_heartbeat
+| table label site status is_searchable hb_age_s bucket_count host_port_pair
+| sort - hb_age_s

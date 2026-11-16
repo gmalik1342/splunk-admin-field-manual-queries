@@ -1,0 +1,17 @@
+``` CL-08 | Flapping Peer: Up → Pending → Up Cycling
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A peer repeatedly cycles between Up, Pending, and Down;
+    correlate the transitions with heartbeat loss or host resource exhaustion.
+    Run on: SH.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-24h
+| rex field=_raw "peer_name=(?<peer_name>\S+)"
+| rex field=_raw "from=(?<from_state>\w+)\s+to=(?<to_state>\w+)"
+| rex field=_raw "reason=\"(?<reason>[^\"]+)\""
+| bin _time span=1h
+| stats count as transitions values(to_state) as states_hit
+        values(reason) as reasons by _time peer_name
+| where transitions>=4
+| sort - transitions

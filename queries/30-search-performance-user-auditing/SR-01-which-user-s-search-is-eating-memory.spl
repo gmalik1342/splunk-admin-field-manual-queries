@@ -1,0 +1,31 @@
+``` SR-01 | Which User's Search Is Eating Memory and CPU
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The search head or the indexers are pinned on memory or CPU and
+    splunkd is slow to respond; identify the searches, users, and apps
+    consuming the most resources right now and over the last few hours.
+    Run on: SH, with indexer _introspection forwarded. Indexers record the
+    remote half of each search under the same sid, so totals cover the whole
+    search.
+    Query: Main query
+```
+index=_introspection sourcetype=splunk_resource_usage component=PerProcess
+    data.search_props.sid=* earliest=-4h
+| eval sid='data.search_props.sid', user='data.search_props.user',
+       app='data.search_props.app', label='data.search_props.label',
+       search_type='data.search_props.type', role='data.search_props.role',
+       mem_mb='data.mem_used', cpu_pct='data.pct_cpu'
+| stats max(mem_mb) as peak_mem_mb max(cpu_pct) as peak_cpu_pct
+        latest(_time) as last_seen
+        by sid host role user app label search_type
+| stats sum(peak_mem_mb) as total_peak_mem_mb
+        max(peak_cpu_pct) as worst_host_cpu_pct
+        dc(host) as hosts values(role) as roles latest(last_seen) as last_seen
+        by sid user app label search_type
+| eval total_peak_mem_gb=round(total_peak_mem_mb / 1024, 2),
+       running_now=if(now() - last_seen < 120, "YES", "no")
+| convert ctime(last_seen)
+| sort - total_peak_mem_mb
+| head 25
+| table sid user app search_type label running_now total_peak_mem_gb
+        worst_host_cpu_pct hosts roles last_seen

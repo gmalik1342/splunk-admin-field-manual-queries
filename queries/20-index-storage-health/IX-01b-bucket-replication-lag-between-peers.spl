@@ -1,0 +1,15 @@
+``` IX-01 | Bucket Replication Lag Between Peers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Replication fixups are not draining and peers report replication
+    timeouts; measure where bucket replication is failing or slow and which
+    source-to-target link is responsible.
+    Run on: SH for link errors, CM for the streaming backlog.
+    Query: Streaming backlog per target (CM)
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+| rest splunk_server=local /services/cluster/master/fixup level=streaming
+| rename title as bucket_id, "latest.reason" as latest_reason
+| eval index=mvindex(split(bucket_id,"~"),0)
+| stats count as streaming_fixups values(latest_reason) as reasons by index
+| sort - streaming_fixups

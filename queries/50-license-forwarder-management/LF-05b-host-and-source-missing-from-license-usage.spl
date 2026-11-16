@@ -1,0 +1,15 @@
+``` LF-05 | Host and Source Missing From License Usage (Squashing)
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: License usage reports show large volumes with an empty host or
+    source; recover per-host and per-source attribution when license_usage.log
+    has squashed those values.
+    Run on: SH.
+    Query: Fallback attribution from indexer throughput metrics (SH)
+```
+index=_internal source=*metrics.log group=per_host_thruput earliest=-1d@d latest=@d
+| stats sum(kb) as kb by series
+| eval gb=round(kb / 1024 / 1024, 2)
+| rename series as host
+| sort - kb
+| head 25

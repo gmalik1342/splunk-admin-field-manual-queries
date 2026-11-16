@@ -1,0 +1,23 @@
+``` KV-05 | Slow KV Store Operations and Lock Contention
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Lookups against KV Store collections time out or dashboards that
+    use them are slow; find the slow operations, the collections they hit, and
+    whether mongod is queueing on locks.
+    Run on: SH. mongod logs any operation slower than 100 ms by default, so
+    every row here is already slow.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=mongod earliest=-4h ("Slow query" OR "ms")
+| rex field=_raw "\"durationMillis\":(?<dur_json>\d+)"
+| rex field=_raw "\s(?<dur_text>\d+)ms\s*$"
+| rex field=_raw "\"ns\":\"(?<ns_json>[^\"]+)\""
+| rex field=_raw "\s(?:query|command|update|remove|insert)\s+(?<ns_text>\S+)"
+| eval duration_ms=tonumber(coalesce(dur_json, dur_text)),
+       ns=coalesce(ns_json, ns_text)
+| where duration_ms >= 100
+| stats count as slow_ops median(duration_ms) as median_ms
+        perc95(duration_ms) as p95_ms max(duration_ms) as max_ms
+        by host ns
+| sort - slow_ops

@@ -1,0 +1,19 @@
+``` CL-04 | Fixup Backlog Stuck: Which Fixup Level Is Not Draining
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Bucket fixup tasks are piling up after a peer outage; determine
+    which fixup level is stuck and the error preventing progress.
+    Run on: CM for the counts, SH for the error signatures.
+    Query: Error signatures driving the backlog (SH)
+```
+index=_internal sourcetype=splunkd earliest=-1h
+    (component=CMRepJob OR component=CMMaster OR component=BucketReplicator)
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval msg_sig=replace(msg, "\S+~\d+~[0-9A-F-]+", "BUCKET")
+| eval msg_sig=replace(msg_sig, "[0-9a-fA-F-]{16,}", "GUID")
+| eval msg_sig=replace(msg_sig, "\d+", "N")
+| stats count latest(_time) as last_seen dc(host) as hosts
+        by component log_level msg_sig
+| convert ctime(last_seen)
+| sort - count

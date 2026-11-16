@@ -1,0 +1,19 @@
+``` CL-10 | SHC Member Out of Sync on Configuration Replication
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A search head cluster member is serving stale knowledge objects
+    because configuration replication with the captain is failing; identify
+    the member and the failure mode.
+    Run on: SHC member, or any SH that receives the members' _internal.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd earliest=-4h component=ConfReplication*
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| rex field=_raw "consecutiveErrors=(?<consecutive_errors>\d+)"
+| eval msg_sig=replace(replace(msg,"[0-9a-fA-F-]{16,}","GUID"),"\d+","N")
+| stats count latest(_time) as last_seen
+        max(consecutive_errors) as max_consecutive_errors
+        by host component msg_sig
+| convert ctime(last_seen)
+| sort - max_consecutive_errors - count

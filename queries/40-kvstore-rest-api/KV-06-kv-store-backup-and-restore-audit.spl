@@ -1,0 +1,24 @@
+``` KV-06 | KV Store Backup and Restore Audit
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Confirm who ran a KV Store backup or restore, when, and whether
+    it finished, especially after collections lost data or reverted to old
+    contents.
+    Run on: SH, against the _internal of the instance where the backup or
+    restore ran. splunk backup kvstore and splunk restore kvstore call the
+    REST endpoints shown in the REQUEST rows, so CLI and REST use both appear.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal earliest=-30d
+    ( (sourcetype=splunkd_access (method=POST OR method=DELETE)
+          uri="*/kvstore/backup*")
+   OR (sourcetype=splunkd (component=KVStore* OR component=KVStorage*)
+          ("backup" OR "restore" OR "Backup" OR "Restore")) )
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| rex field=uri "/kvstore/backup/(?<operation>\w+)"
+| eval row=if(sourcetype="splunkd_access", "REQUEST", "KVSTORE_LOG"),
+       actor=if(sourcetype="splunkd_access", user . " @ " . clientip, null()),
+       detail=coalesce(operation, msg)
+| table _time host row actor status log_level detail
+| sort 0 _time

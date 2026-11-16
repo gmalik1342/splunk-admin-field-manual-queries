@@ -1,0 +1,17 @@
+``` CL-07 | Peer Stuck in Decommissioning After offline --enforce-counts
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A peer was taken offline with splunk offline --enforce-counts
+    and has sat in Decommissioning for hours; determine what is blocking
+    completion.
+    Run on: SH for the duration, CM for the blockers.
+    Query: Blockers (CM)
+```
+| rest splunk_server=local /services/cluster/master/info
+| table maintenance_mode rolling_restart_flag
+| appendcols
+    [| rest splunk_server=local /services/cluster/master/peers
+     | stats count(eval(status="Up")) as peers_up
+             count(eval(status="Decommissioning")) as peers_decom by site
+     | stats list(site) as site list(peers_up) as peers_up
+             list(peers_decom) as peers_decom]

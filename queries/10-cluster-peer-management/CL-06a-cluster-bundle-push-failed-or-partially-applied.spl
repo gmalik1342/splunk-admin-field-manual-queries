@@ -1,0 +1,20 @@
+``` CL-06 | Cluster Bundle Push Failed or Partially Applied
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Trace a failed or partially applied apply cluster-bundle to the
+    peer that rejected it and the validation error it threw.
+    Run on: SH for the error timeline, CM for the per-peer sync state.
+    Query: Main query
+```
+index=_internal earliest=-24h
+    ( (sourcetype=splunkd_access method=POST
+          (uri="*/cluster/*/control/default/apply*" OR
+              uri="*/cluster/*/control/default/validate_bundle*"))
+   OR (sourcetype=splunkd "bundle" (log_level=WARN OR log_level=ERROR)
+          (component=CM* OR component=ClusterBundle* OR
+              component=ApplicationManager)) )
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval actor=if(sourcetype="splunkd_access", user." @ ".clientip, null())
+| eval row=if(sourcetype="splunkd_access", "PUSH_REQUEST", "BUNDLE_ERROR")
+| table _time host row actor status component msg
+| sort 0 _time

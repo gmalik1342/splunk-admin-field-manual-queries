@@ -1,0 +1,22 @@
+``` CL-11 | SHC Deployer Push Audit
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Audit who ran apply shcluster-bundle, when, and which SHC
+    members failed to take the push.
+    Run on: DEP for the PUSH_REQUEST rows. The deployer is usually not an
+    indexer-cluster search peer, so its _internal must be forwarded or you
+    will see member rows only.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal earliest=-7d
+    ( (sourcetype=splunkd_access method=POST (uri="*shcluster*" OR
+        uri="*/apps/deploy*"))
+   OR (sourcetype=splunkd (component=SHC* OR component=ApplicationManager OR
+       component=DeployedApplication)
+          (bundle OR deploy OR "app ") (log_level=WARN OR log_level=ERROR)) )
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval row=if(sourcetype="splunkd_access","PUSH_REQUEST","MEMBER_ERROR"),
+       actor=if(sourcetype="splunkd_access", user." @ ".clientip, null())
+| table _time host row actor uri status component msg
+| sort 0 _time

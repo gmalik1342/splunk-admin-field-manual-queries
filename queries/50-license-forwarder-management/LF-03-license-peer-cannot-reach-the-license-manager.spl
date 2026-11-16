@@ -1,0 +1,30 @@
+``` LF-03 | License Peer Cannot Reach the License Manager
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: An indexer or search head shows a license bulletin about being
+    unable to contact the license manager; identify which instances are not
+    checking in and since when.
+    Run on: SH. host is the license peer that cannot reach the LM. The peer
+    has to forward its _internal somewhere you can search; if it cannot reach
+    anything, check splunkd.log on the host directly.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-72h
+    (component=LMTracker OR component=LMStackMgr OR component=LMSlaveInfo
+     OR component=LicenseMgr OR component=LMConfig)
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval msg_sig=replace(replace(msg, "[0-9a-fA-F-]{16,}", "GUID"), "\d+", "N")
+| eval cause=case(
+    match(msg, "(?i)connect|unreachable|timed out|refused"), "NETWORK",
+    match(msg, "(?i)ssl|certificate|handshake"),             "TLS",
+    match(msg, "(?i)auth|pass4SymmKey|unauthorized"),        "AUTH (pass4SymmKey)",
+    match(msg, "(?i)expired|invalid license"),               "LICENSE FILE",
+    true(),                                                  "OTHER")
+| stats count earliest(_time) as first_seen latest(_time) as last_seen
+        values(msg_sig) as signatures
+        by host cause
+| eval hours_failing=round((last_seen - first_seen) / 3600, 1)
+| convert ctime(first_seen) ctime(last_seen)
+| sort - hours_failing

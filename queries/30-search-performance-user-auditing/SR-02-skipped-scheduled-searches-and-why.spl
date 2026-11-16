@@ -1,0 +1,19 @@
+``` SR-02 | Skipped Scheduled Searches and Why
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Alerts did not fire and reports are missing runs; list every
+    skipped scheduled search with its skip reason, owning app, and skip ratio.
+    Run on: SH. In an SHC, host shows which member the captain assigned the
+    job to.
+    Query: Main query
+```
+index=_internal sourcetype=scheduler earliest=-24h
+    (status=success OR status=skipped OR status=continued OR status=deferred)
+| eval skipped=if(status="skipped", 1, 0)
+| stats count as attempts sum(skipped) as skipped
+        values(eval(if(status="skipped", reason, null()))) as skip_reasons
+        by host app savedsearch_name user
+| where skipped > 0
+| eval skip_pct=round(100 * skipped / attempts, 1)
+| sort - skipped
+| table host app savedsearch_name user attempts skipped skip_pct skip_reasons

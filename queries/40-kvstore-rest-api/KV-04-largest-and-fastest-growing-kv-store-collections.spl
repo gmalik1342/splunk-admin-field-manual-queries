@@ -1,0 +1,27 @@
+``` KV-04 | Largest and Fastest-Growing KV Store Collections
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The KV Store data directory is growing, initial sync takes
+    hours, or memory use on the search head keeps climbing; rank collections
+    by size and by growth over the last week.
+    Run on: SH, against the KV Store captain's _introspection (sizes are the
+    same on every member once replicated).
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_introspection sourcetype=kvstore component=KVStoreCollectionStats
+    earliest=-7d
+| eval ns='data.ns', size_mb='data.size' / 1024 / 1024,
+       storage_mb='data.storageSize' / 1024 / 1024,
+       index_mb='data.totalIndexSize' / 1024 / 1024,
+       docs='data.count'
+| stats earliest(size_mb) as size_mb_7d_ago latest(size_mb) as size_mb
+        latest(storage_mb) as storage_mb latest(index_mb) as index_mb
+        latest(docs) as docs
+        by host ns
+| eval growth_mb=round(size_mb - size_mb_7d_ago, 1),
+       size_mb=round(size_mb, 1), storage_mb=round(storage_mb, 1),
+       index_mb=round(index_mb, 1)
+| sort - size_mb
+| head 25
+| table host ns docs size_mb storage_mb index_mb growth_mb

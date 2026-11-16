@@ -1,0 +1,26 @@
+``` LF-07 | Heavy Forwarder Backpressure: Output Blocked to Indexers
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A heavy forwarder or intermediate forwarder is falling behind;
+    confirm whether its output to the indexers is blocked, to which
+    destinations, and for how long.
+    Run on: SH, with the forwarder's _internal forwarded. A fully blocked
+    forwarder may not be able to send its own logs; if nothing shows up, check
+    splunkd.log on the box.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd component=TcpOutputProc earliest=-4h
+    ("blocked" OR "paused" OR "timed out" OR "Cooked connection")
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "host_dest=(?<dest>[^\s]+)"
+| rex field=_raw "blocked_seconds=(?<blocked_s>\d+)"
+| rex field=_raw "(?:to|from) (?:idx=)?(?<dest_alt>[\d.]+:\d+)"
+| eval dest=coalesce(dest, dest_alt),
+       issue=case(isnotnull(blocked_s),                    "OUTPUT BLOCKED",
+                  match(_raw, "(?i)ACK"),                  "ACK TIMEOUT",
+                  match(_raw, "(?i)connect"),              "CONNECT FAILED",
+                  true(),                                  "OTHER")
+| stats count max(blocked_s) as max_blocked_s latest(_time) as last_seen
+        by host issue dest
+| convert ctime(last_seen)
+| sort - max_blocked_s

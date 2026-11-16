@@ -1,0 +1,25 @@
+``` IX-07 | Line-Breaking and Truncation Errors per Sourcetype
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Events are being cut off mid-record or multiple records are
+    merged into one event; identify which sourcetypes are hitting TRUNCATE or
+    MAX_EVENTS limits and from which hosts.
+    Run on: SH.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    (component=LineBreakingProcessor OR component=AggregatorMiningProcessor)
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw
+    "source::(?<d_source>[^|]+)\|host::(?<d_host>[^|]+)\|(?<d_st>[^|]+)\|"
+| eval data_sourcetype=coalesce(data_sourcetype, d_st),
+       data_host=coalesce(data_host, d_host)
+| rex field=_raw "line length >= (?<line_len>\d+)"
+| eval issue=case(
+    match(_raw, "Truncating line"),          "TRUNCATED (TRUNCATE)",
+    match(_raw, "MAX_EVENTS"),               "MERGE LIMIT (MAX_EVENTS)",
+    match(_raw, "Breaking event because"),   "FORCED BREAK",
+    true(),                                  "OTHER")
+| stats count dc(data_host) as hosts max(line_len) as max_line_len
+        by data_sourcetype issue component
+| sort - count

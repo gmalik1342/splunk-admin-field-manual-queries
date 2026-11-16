@@ -1,0 +1,33 @@
+``` KV-09 | Configuration Changes Made Through REST
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: A setting changed without a ticket; trace configuration changes
+    made through the REST API (conf files, inputs, indexes, server settings,
+    app installs) back to the user and client that made them.
+    Run on: SH, against the _internal of the instance whose configuration
+    changed. Changes made through Splunk Web also go through REST and appear
+    here.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-30d
+    (method=POST OR method=DELETE)
+    (uri="*/configs/conf-*" OR uri="*/properties/*" OR uri="*/data/inputs/*"
+     OR uri="*/data/indexes*" OR uri="*/server/settings*"
+     OR uri="*/apps/local*" OR uri="*/apps/appinstall*"
+     OR uri="*/deployment/server/*")
+    NOT user=splunk-system-user NOT user="-"
+| eval path=mvindex(split(uri, "?"), 0)
+| rex field=path "/(?:configs/conf-|properties/)(?<conf_file>[^/]+)"
+| rex field=path "/(?:configs/conf-|properties/)[^/]+/(?<stanza>[^/]+)"
+| rex field=path "/data/(?<data_area>inputs/[^/]+|indexes)(?:/(?<data_obj>[^/]+))?"
+| rex field=path "/apps/(?:local|appinstall)(?:/(?<app_name>[^/]+))?"
+| eval target=case(isnotnull(conf_file), conf_file . ".conf",
+                   isnotnull(data_area), data_area,
+                   like(path, "%/apps/%"), "app",
+                   like(path, "%/server/settings%"), "server/settings",
+                   true(), "deployment server"),
+       object=urldecode(coalesce(stanza, data_obj, app_name, "")),
+       change=if(method="DELETE", "DELETE", "WRITE")
+| where status < 400
+| table _time host user clientip change target object status
+| sort 0 - _time

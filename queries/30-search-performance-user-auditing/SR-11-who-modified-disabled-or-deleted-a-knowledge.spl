@@ -1,0 +1,38 @@
+``` SR-11 | Who Modified, Disabled, or Deleted a Knowledge Object
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: An alert stopped firing, a lookup was emptied, or a dashboard
+    disappeared; identify who changed or deleted the saved search, lookup,
+    macro, view, or field extraction and when.
+    Run on: SH. In an SHC, the change lands on whichever member served the
+    request, then replicates. host tells you which member the user was on.
+    Query: Main query
+```
+index=_internal sourcetype=splunkd_access earliest=-30d
+    (method=POST OR method=DELETE)
+    (uri="*/saved/searches/*" OR uri="*/data/lookup-table-files*"
+     OR uri="*/admin/macros*" OR uri="*/data/ui/views*"
+     OR uri="*/data/props/*" OR uri="*/data/transforms/*"
+     OR uri="*/saved/eventtypes*" OR uri="*/data/ui/nav*")
+    NOT uri="*/dispatch*" NOT uri="*/acknowledge*" NOT uri="*/history*"
+    NOT user=splunk-system-user NOT user="-"
+| rex field=uri "/servicesNS/(?<owner>[^/]+)/(?<app>[^/]+)/(?<ko_path>[^?\s]+)"
+| eval ko_type=case(like(ko_path, "saved/searches%"),          "saved search",
+                   like(ko_path, "data/lookup-table-files%"), "lookup",
+                   like(ko_path, "admin/macros%"),            "macro",
+                   like(ko_path, "data/ui/views%"),           "view",
+                   like(ko_path, "data/props/%"),             "props",
+                   like(ko_path, "data/transforms/%"),        "transforms",
+                   like(ko_path, "saved/eventtypes%"),        "eventtype",
+                   like(ko_path, "data/ui/nav%"),             "nav")
+| eval parts=split(ko_path, "/"),
+       depth=if(ko_type="props" OR ko_type="transforms", 3, 2),
+       ko_name=urldecode(mvindex(parts, depth)),
+       sub_action=mvindex(parts, depth + 1)
+| eval change=case(method="DELETE", "DELETE",
+                   sub_action="disable", "DISABLE", sub_action="enable", "ENABLE",
+                   sub_action="acl", "PERMISSIONS",
+                   isnull(ko_name), "CREATE", true(), "MODIFY")
+| where status < 400
+| table _time host user clientip change ko_type app owner ko_name status
+| sort 0 - _time

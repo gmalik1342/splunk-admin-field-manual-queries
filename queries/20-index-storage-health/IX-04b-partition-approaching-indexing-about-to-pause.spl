@@ -1,0 +1,17 @@
+``` IX-04 | Partition Approaching minFreeSpace: Indexing About to Pause
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Warn before splunkd pauses indexing on a peer because a
+    partition is approaching the minFreeSpace threshold, and confirm whether
+    indexing has already stopped.
+    Run on: SH.
+    Query: Has indexing already paused (SH)
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    ("minFreeSpace" OR "paused" OR "disk space")
+    (log_level=WARN OR log_level=ERROR)
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| stats count earliest(_time) as first_seen latest(_time) as last_seen
+        by host component msg
+| convert ctime(first_seen) ctime(last_seen)
+| sort - last_seen

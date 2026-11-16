@@ -1,0 +1,20 @@
+``` CL-09 | Search Head Cluster Captain Election Churn
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: SHC captaincy keeps moving between members, scheduled searches
+    are being skipped during handoffs, and the cause of the elections needs to
+    be found.
+    Run on: SHC member.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-24h
+    (component=SHCRaftConsensus OR component=SHCMaster OR component=SHCSlave)
+    (elect* OR leader OR captain OR term OR vote)
+| rex field=_raw "\]\s+-\s+(?<msg>.+)$"
+| eval msg_sig=replace(replace(msg,"[0-9a-fA-F-]{16,}","GUID"),"\d+","N")
+| bin _time span=15m
+| stats count as events dc(host) as members_reporting
+        values(msg_sig) as signatures by _time
+| where events>0
+| sort 0 _time

@@ -1,0 +1,25 @@
+``` IX-08 | Which Indexing Queue Is Blocked, and Since When
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: Ingest is lagging or forwarders report blocked output; determine
+    which pipeline queue (parsing, aggregation, typing, index) is blocked on
+    which host, and how long it has been saturated.
+    Run on: SH. Works for indexers and heavy forwarders, since both write
+    metrics.log every 30 seconds.
+    Query: Main query
+```
+index=_internal source=*metrics.log sourcetype=splunkd group=queue earliest=-4h
+    name IN (parsingqueue, aggqueue, typingqueue, indexqueue, splunktcpin)
+| eval fill_pct=round(100 * current_size_kb / max_size_kb, 1),
+       is_blocked=if(blocked="true", 1, 0)
+| stats avg(fill_pct) as avg_fill_pct perc95(fill_pct) as p95_fill_pct
+        sum(is_blocked) as blocked_samples count as samples
+        earliest(eval(if(is_blocked=1, _time, null()))) as first_blocked
+        by host name
+| eval blocked_pct=round(100 * blocked_samples / samples, 1),
+       stage=case(name="splunktcpin", 0, name="parsingqueue", 1,
+                  name="aggqueue", 2, name="typingqueue", 3,
+                  name="indexqueue", 4)
+| convert ctime(first_blocked)
+| sort host stage
+| table host stage name avg_fill_pct p95_fill_pct blocked_pct first_blocked

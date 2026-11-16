@@ -1,0 +1,26 @@
+``` IX-11 | SmartStore Cache Thrash and Remote Storage Failures
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: SmartStore searches are slow and peers show constant download
+    activity; detect cache eviction thrash and failed uploads or downloads to
+    the remote object store.
+    Run on: SH.
+    Query: Main query
+    STATUS: lab verification pending; field or message names may differ on your version.
+```
+index=_internal sourcetype=splunkd earliest=-4h
+    (component=CacheManager OR component=S3Client OR component=RemoteStorage*
+     OR component=AzureBlob* OR component=GCS*)
+| eval action=case(
+    match(_raw, "(?i)evict"),                       "EVICT",
+    match(_raw, "(?i)download") AND log_level="INFO","DOWNLOAD",
+    match(_raw, "(?i)upload")   AND log_level="INFO","UPLOAD",
+    match(_raw, "(?i)download"),                    "DOWNLOAD_FAIL",
+    match(_raw, "(?i)upload"),                      "UPLOAD_FAIL",
+    log_level="ERROR" OR log_level="WARN",          "OTHER_ERROR",
+    true(),                                         null())
+| where isnotnull(action)
+| bin _time span=15m
+| stats count by _time host action
+| xyseries _time action count
+| fillnull value=0

@@ -1,0 +1,19 @@
+``` LF-02 | License Warnings and Violations: Which Day, Which Pool
+    Splunk Administrator Field Manual - Gaurav Malik
+
+    Use case: The license manager is showing warnings, or searches are blocked
+    for a license violation; identify the days and pools that went over quota
+    and how close the stack is to a violation.
+    Run on: SH for the history, LM for the active messages.
+    Query: Main query
+```
+index=_internal source=*license_usage.log* type=RolloverSummary earliest=-60d@d
+| eval day=strftime(_time - 86400, "%F"),
+       used_gb=round(b / 1024 / 1024 / 1024, 2),
+       quota_gb=round(stacksz / 1024 / 1024 / 1024, 1),
+       over=if(b > stacksz, 1, 0),
+       pct=round(100 * b / stacksz, 1)
+| sort 0 _time
+| streamstats time_window=30d sum(over) as warnings_30d
+| table day pool stack used_gb quota_gb pct over warnings_30d
+| sort 0 - day
