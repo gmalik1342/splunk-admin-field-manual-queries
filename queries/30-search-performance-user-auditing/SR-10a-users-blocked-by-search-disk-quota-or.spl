@@ -6,6 +6,8 @@
     much of the quota they are using.
     Run on: SH, and SH-local for current disk use.
     Query: Main query
+    If this returns nothing, run probes/SR-10-probe.spl,
+    probes/SR-10-probe-rest.spl to confirm the data it reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal earliest=-24h

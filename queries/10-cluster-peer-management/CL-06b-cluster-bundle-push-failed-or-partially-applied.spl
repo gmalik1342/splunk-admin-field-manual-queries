@@ -5,6 +5,8 @@
     peer that rejected it and the validation error it threw.
     Run on: SH for the error timeline, CM for the per-peer sync state.
     Query: Per-peer bundle sync state (CM)
+    If this returns nothing, run probes/CL-06-probe.spl,
+    probes/CL-06-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/cluster/master/peers
 | eval bundle_in_sync=if(active_bundle_id==latest_bundle_id,"yes","NO")

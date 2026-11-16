@@ -7,6 +7,8 @@
     Run on: SH. Indexers log every forwarder connection every 30 seconds, so a
     forwarder missing for 15 minutes has missed about 30 reports.
     Query: Main query
+    If this returns nothing, run probes/LF-06-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*metrics.log group=tcpin_connections earliest=-7d
 | eval fwd=coalesce(hostname, sourceHost, sourceIp)

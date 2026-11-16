@@ -6,6 +6,8 @@
     the member and the failure mode.
     Run on: SHC member, or any SH that receives the members' _internal.
     Query: Main query
+    If this returns nothing, run probes/CL-10-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd earliest=-4h component=ConfReplication*
     (log_level=WARN OR log_level=ERROR)

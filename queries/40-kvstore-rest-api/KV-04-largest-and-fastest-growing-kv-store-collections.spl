@@ -7,6 +7,8 @@
     Run on: SH, against the KV Store captain's _introspection (sizes are the
     same on every member once replicated).
     Query: Main query
+    If this returns nothing, run probes/KV-04-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_introspection sourcetype=kvstore component=KVStoreCollectionStats

@@ -7,6 +7,8 @@
     an SHC, user and role changes replicate, so one member's view is enough
     for the capability list.
     Query: Current holders of escalation-grade capabilities (SH-local)
+    If this returns nothing, run probes/SR-08-probe.spl,
+    probes/SR-08-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/authorization/roles count=0
 | eval caps=mvappend(capabilities, imported_capabilities)

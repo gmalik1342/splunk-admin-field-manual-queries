@@ -6,6 +6,8 @@
     indexing has already stopped.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/IX-04-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_introspection sourcetype=splunk_disk_objects component=Partitions
     earliest=-30m

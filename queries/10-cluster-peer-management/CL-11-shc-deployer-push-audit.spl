@@ -7,6 +7,8 @@
     indexer-cluster search peer, so its _internal must be forwarded or you
     will see member rows only.
     Query: Main query
+    If this returns nothing, run probes/CL-11-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal earliest=-7d

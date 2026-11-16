@@ -8,6 +8,8 @@
     forwarder may not be able to send its own logs; if nothing shows up, check
     splunkd.log on the box.
     Query: Output queue fill on the forwarder (SH)
+    If this returns nothing, run probes/LF-07-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*metrics.log group=queue earliest=-4h
     (name=tcpout_* OR name=parsingqueue OR name=indexqueue)

@@ -5,6 +5,8 @@
     peer that rejected it and the validation error it threw.
     Run on: SH for the error timeline, CM for the per-peer sync state.
     Query: Main query
+    If this returns nothing, run probes/CL-06-probe.spl,
+    probes/CL-06-probe-rest.spl to confirm the data it reads exists here.
 ```
 index=_internal earliest=-24h
     ( (sourcetype=splunkd_access method=POST

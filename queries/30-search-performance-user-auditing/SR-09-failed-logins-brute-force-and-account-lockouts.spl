@@ -8,6 +8,8 @@
     (deployment server, cluster manager, heavy forwarders). Each logs its own
     _audit.
     Query: Main query
+    If this returns nothing, run probes/SR-09-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_audit sourcetype=audittrail action="login attempt" earliest=-24h
 | eval src=coalesce(src, clientip),

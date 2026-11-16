@@ -5,6 +5,8 @@
     correlate the transitions with heartbeat loss or host resource exhaustion.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/CL-08-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-24h
 | rex field=_raw "peer_name=(?<peer_name>\S+)"

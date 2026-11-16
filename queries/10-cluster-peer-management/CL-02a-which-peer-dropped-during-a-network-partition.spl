@@ -6,6 +6,8 @@
     Down.
     Run on: SH for the transition history, CM for live heartbeat state.
     Query: Main query
+    If this returns nothing, run probes/CL-02-probe.spl,
+    probes/CL-02-probe-rest.spl to confirm the data it reads exists here.
 ```
 index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-4h
 | rex field=_raw "peer_name=(?<peer_name>\S+)"

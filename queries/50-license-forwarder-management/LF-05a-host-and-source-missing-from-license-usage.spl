@@ -6,6 +6,8 @@
     has squashed those values.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/LF-05-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*license_usage.log* type=Usage earliest=-1d@d latest=@d
 | eval h_state=if(isnull(h) OR h="", "SQUASHED", "kept"),

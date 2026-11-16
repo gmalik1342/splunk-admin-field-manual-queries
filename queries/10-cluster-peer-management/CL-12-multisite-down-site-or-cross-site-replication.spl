@@ -5,6 +5,8 @@
     detect a down site or a site carrying a disproportionate share of buckets.
     Run on: CM.
     Query: Main query
+    If this returns nothing, run probes/CL-12-probe-rest1.spl,
+    probes/CL-12-probe-rest2.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/cluster/master/peers
 | eval up=if(status="Up",1,0), searchable=if(is_searchable="1" OR

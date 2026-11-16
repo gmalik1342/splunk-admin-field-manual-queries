@@ -7,6 +7,8 @@
     Run on: SH with all indexers as search peers (splunk_server=* fans the
     REST call out to them).
     Query: Main query
+    If this returns nothing, run probes/IX-05-probe-rest.spl to confirm the
+    data it reads exists here.
 ```
 | rest splunk_server=* /services/data/indexes datatype=all count=0
 | search disabled=0 NOT title=_*

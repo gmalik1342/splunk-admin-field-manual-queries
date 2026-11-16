@@ -8,6 +8,8 @@
     remote half of each search under the same sid, so totals cover the whole
     search.
     Query: Main query
+    If this returns nothing, run probes/SR-01-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_introspection sourcetype=splunk_resource_usage component=PerProcess
     data.search_props.sid=* earliest=-4h

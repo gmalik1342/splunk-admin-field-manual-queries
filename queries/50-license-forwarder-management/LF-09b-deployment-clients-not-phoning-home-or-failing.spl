@@ -8,6 +8,8 @@
     splunkd_access). SH for client-side errors, using the forwarders'
     _internal.
     Query: App install failures reported by clients (SH)
+    If this returns nothing, run probes/LF-09-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd earliest=-24h

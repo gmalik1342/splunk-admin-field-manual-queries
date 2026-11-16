@@ -6,6 +6,9 @@
     completion.
     Run on: SH for the duration, CM for the blockers.
     Query: Main query
+    If this returns nothing, run probes/CL-07-probe.spl,
+    probes/CL-07-probe-rest1.spl, probes/CL-07-probe-rest2.spl to confirm the
+    data it reads exists here.
 ```
 index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-48h
 | rex field=_raw "peer_name=(?<peer_name>\S+)"

@@ -7,6 +7,8 @@
     Run on: SH-local. This shows only jobs dispatched from the search head you
     are logged into.
     Query: Main query
+    If this returns nothing, run probes/SR-04-probe-rest.spl to confirm the
+    data it reads exists here.
 ```
 | rest splunk_server=local /services/search/jobs count=0
 | search dispatchState=RUNNING OR dispatchState=FINALIZING

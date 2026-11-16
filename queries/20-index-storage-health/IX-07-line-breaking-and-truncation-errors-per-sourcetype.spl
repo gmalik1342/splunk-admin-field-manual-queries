@@ -6,6 +6,8 @@
     MAX_EVENTS limits and from which hosts.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/IX-07-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd earliest=-24h
     (component=LineBreakingProcessor OR component=AggregatorMiningProcessor)

@@ -6,6 +6,8 @@
     maxTotalDataSizeMB instead of aging out on frozenTimePeriodInSecs.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/IX-02-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd component=BucketMover

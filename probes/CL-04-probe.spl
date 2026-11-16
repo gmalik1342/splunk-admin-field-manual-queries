@@ -1,0 +1,25 @@
+``` Probe for CL-04: checks that the data CL-04 reads exists on this
+    deployment. One row per data source: OK, or MISSING. MISSING means the
+    entry's query cannot see that data here (not forwarded, no access, or a
+    different component name on this version). See Appendix A in the book.
+```
+earliest=-1h
+    (index=_internal sourcetype=splunkd component=CMRepJob)
+    OR (index=_internal sourcetype=splunkd component=CMMaster)
+    OR (index=_internal sourcetype=splunkd component=BucketReplicator)
+| eval check=mvappend(if(searchmatch("index=_internal sourcetype=splunkd component=CMRepJob"), "_internal splunkd component=CMRepJob", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=CMMaster"), "_internal splunkd component=CMMaster", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=BucketReplicator"), "_internal splunkd component=BucketReplicator", null()))
+| mvexpand check
+| stats count as events dc(host) as hosts latest(_time) as last_seen by check
+| append
+    [| makeresults
+     | eval check=split("_internal splunkd component=CMRepJob;_internal splunkd component=CMMaster;_internal splunkd component=BucketReplicator", ";")
+     | mvexpand check
+     | eval events=0, hosts=0
+     | fields check events hosts]
+| stats max(events) as events max(hosts) as hosts max(last_seen) as last_seen
+        by check
+| eval status=if(events > 0, "OK", "MISSING")
+| convert ctime(last_seen)
+| table check status events hosts last_seen

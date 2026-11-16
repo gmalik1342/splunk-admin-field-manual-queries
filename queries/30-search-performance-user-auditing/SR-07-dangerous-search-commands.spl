@@ -6,6 +6,8 @@
     Run on: SH. The join resolves each user's current roles from the search
     head you run it on.
     Query: Main query
+    If this returns nothing, run probes/SR-07-probe.spl,
+    probes/SR-07-probe-rest.spl to confirm the data it reads exists here.
 ```
 index=_audit sourcetype=audittrail action=search info=granted earliest=-7d
 | eval spl=trim(search, "'")

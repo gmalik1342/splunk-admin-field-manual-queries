@@ -6,6 +6,9 @@
     completion.
     Run on: SH for the duration, CM for the blockers.
     Query: Blockers (CM)
+    If this returns nothing, run probes/CL-07-probe.spl,
+    probes/CL-07-probe-rest1.spl, probes/CL-07-probe-rest2.spl to confirm the
+    data it reads exists here.
 ```
 | rest splunk_server=local /services/cluster/master/info
 | table maintenance_mode rolling_restart_flag

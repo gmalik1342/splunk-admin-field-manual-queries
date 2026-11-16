@@ -1,0 +1,6 @@
+``` Probe for LF-01: lists the fields /services/licenser/pools returns on this instance.
+    An error means the endpoint is not served here; run it on the instance
+    named in the entry's Run on line. ```
+| rest splunk_server=local /services/licenser/pools count=1
+| transpose 0
+| rename column as field, "row 1" as sample_value

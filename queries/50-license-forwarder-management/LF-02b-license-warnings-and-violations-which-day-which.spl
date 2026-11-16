@@ -6,6 +6,8 @@
     and how close the stack is to a violation.
     Run on: SH for the history, LM for the active messages.
     Query: Messages the LM is currently showing (LM)
+    If this returns nothing, run probes/LF-02-probe.spl,
+    probes/LF-02-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/licenser/messages count=0
 | eval created=strftime(create_time, "%F %T")

@@ -7,6 +7,8 @@
     quota_gb, the search head cannot reach the LM's REST endpoints. Run on the
     LM instead.
     Query: Main query
+    If this returns nothing, run probes/LF-01-probe.spl,
+    probes/LF-01-probe-rest.spl to confirm the data it reads exists here.
 ```
 index=_internal source=*license_usage.log* type=Usage earliest=-30d@d latest=@d
 | bin _time span=1d

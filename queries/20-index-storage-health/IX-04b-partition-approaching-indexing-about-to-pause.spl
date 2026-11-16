@@ -6,6 +6,8 @@
     indexing has already stopped.
     Run on: SH.
     Query: Has indexing already paused (SH)
+    If this returns nothing, run probes/IX-04-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd earliest=-24h
     ("minFreeSpace" OR "paused" OR "disk space")

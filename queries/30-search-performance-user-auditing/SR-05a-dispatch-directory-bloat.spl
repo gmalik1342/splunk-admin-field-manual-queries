@@ -6,6 +6,8 @@
     are leaving the largest and longest-lived artifacts.
     Run on: SH-local for the artifact breakdown, SH for the warnings.
     Query: Main query
+    If this returns nothing, run probes/SR-05-probe.spl,
+    probes/SR-05-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/search/jobs count=0
 | eval disk_mb=diskUsage / 1024 / 1024,

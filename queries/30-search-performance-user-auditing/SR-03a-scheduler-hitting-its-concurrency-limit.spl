@@ -7,6 +7,8 @@
     Run on: SH. In an SHC, run against all members; each member enforces its
     own limit.
     Query: Main query
+    If this returns nothing, run probes/SR-03-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=scheduler status=success earliest=-24h
 | eval _time=dispatch_time

@@ -7,6 +7,8 @@
     Run on: SH. Works for indexers and heavy forwarders, since both write
     metrics.log every 30 seconds.
     Query: Main query
+    If this returns nothing, run probes/IX-08-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*metrics.log sourcetype=splunkd group=queue earliest=-4h
     name IN (parsingqueue, aggqueue, typingqueue, indexqueue, splunktcpin)

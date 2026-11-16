@@ -6,6 +6,8 @@
     identify the roll reason.
     Run on: SH.
     Query: Main query
+    If this returns nothing, run probes/IX-03-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd component=HotBucketRoller
     "finished moving hot to warm" earliest=-24h

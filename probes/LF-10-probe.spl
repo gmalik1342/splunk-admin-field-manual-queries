@@ -1,0 +1,29 @@
+``` Probe for LF-10: checks that the data LF-10 reads exists on this
+    deployment. One row per data source: OK, or MISSING. MISSING means the
+    entry's query cannot see that data here (not forwarded, no access, or a
+    different component name on this version). See Appendix A in the book.
+```
+earliest=-1d
+    (index=_internal sourcetype=splunkd component=TcpInputProc)
+    OR (index=_internal sourcetype=splunkd component=TcpOutputFd)
+    OR (index=_internal sourcetype=splunkd component=TcpOutputProc)
+    OR (index=_internal sourcetype=splunkd component=SSLCommon)
+    OR (index=_internal sourcetype=splunkd component=X509Verify)
+| eval check=mvappend(if(searchmatch("index=_internal sourcetype=splunkd component=TcpInputProc"), "_internal splunkd component=TcpInputProc", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=TcpOutputFd"), "_internal splunkd component=TcpOutputFd", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=TcpOutputProc"), "_internal splunkd component=TcpOutputProc", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=SSLCommon"), "_internal splunkd component=SSLCommon", null()),
+                   if(searchmatch("index=_internal sourcetype=splunkd component=X509Verify"), "_internal splunkd component=X509Verify", null()))
+| mvexpand check
+| stats count as events dc(host) as hosts latest(_time) as last_seen by check
+| append
+    [| makeresults
+     | eval check=split("_internal splunkd component=TcpInputProc;_internal splunkd component=TcpOutputFd;_internal splunkd component=TcpOutputProc;_internal splunkd component=SSLCommon;_internal splunkd component=X509Verify", ";")
+     | mvexpand check
+     | eval events=0, hosts=0
+     | fields check events hosts]
+| stats max(events) as events max(hosts) as hosts max(last_seen) as last_seen
+        by check
+| eval status=if(events > 0, "OK", "MISSING")
+| convert ctime(last_seen)
+| table check status events hosts last_seen

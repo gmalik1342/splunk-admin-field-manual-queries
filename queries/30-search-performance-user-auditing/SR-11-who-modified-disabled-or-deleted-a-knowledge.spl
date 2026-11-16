@@ -7,6 +7,8 @@
     Run on: SH. In an SHC, the change lands on whichever member served the
     request, then replicates. host tells you which member the user was on.
     Query: Main query
+    If this returns nothing, run probes/SR-11-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd_access earliest=-30d
     (method=POST OR method=DELETE)

@@ -7,6 +7,8 @@
     Run on: SH, with the forwarders' _internal forwarded. Replace <heavy_fwd>
     with the forwarder's hostname.
     Query: Main query
+    If this returns nothing, run probes/LF-12-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd earliest=-24h
     (component=ThruputProcessor "maxKBps")

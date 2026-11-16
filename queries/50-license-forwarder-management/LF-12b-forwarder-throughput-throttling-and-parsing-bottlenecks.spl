@@ -7,6 +7,8 @@
     Run on: SH, with the forwarders' _internal forwarded. Replace <heavy_fwd>
     with the forwarder's hostname.
     Query: CPU per pipeline processor on a heavy forwarder (SH)
+    If this returns nothing, run probes/LF-12-probe.spl to confirm the data it
+    reads exists here.
     Replace any <angle-bracket> placeholders before running.
 ```
 index=_internal source=*metrics.log group=pipeline earliest=-4h host=<heavy_fwd>

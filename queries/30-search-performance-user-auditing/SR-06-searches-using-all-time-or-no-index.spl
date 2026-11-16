@@ -7,6 +7,8 @@
     Run on: SH. info=completed events carry total_run_time and scan_count, so
     the cost of each flagged search is in the same row.
     Query: Main query
+    If this returns nothing, run probes/SR-06-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_audit sourcetype=audittrail action=search info=completed earliest=-24h
     NOT user=splunk-system-user

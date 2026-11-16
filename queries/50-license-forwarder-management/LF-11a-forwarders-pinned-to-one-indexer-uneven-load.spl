@@ -6,6 +6,8 @@
     and find forwarders that stick to a single indexer.
     Run on: SH. host is the receiving indexer; fwd is the forwarder.
     Query: Main query
+    If this returns nothing, run probes/LF-11-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*metrics.log group=tcpin_connections earliest=-4h
 | eval fwd=coalesce(hostname, sourceHost, sourceIp)

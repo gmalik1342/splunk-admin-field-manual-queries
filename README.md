@@ -29,6 +29,14 @@ Entries with more than one query use `a`, `b`, `c` suffixes; `a` is the main que
 
 > ⚠ 19 entries are marked for lab verification: CL-01, CL-05, CL-09, CL-11, IX-01, IX-02, IX-11, SR-10, SR-12, KV-02, KV-03, KV-04, KV-05, KV-06, KV-10, KV-11, LF-03, LF-09, LF-10. Their field or log-message names may differ on some Splunk versions. Corrections are welcome as issues.
 
+## When a query returns nothing
+
+An empty result is only useful if the query could see its data. Every entry has a matching
+probe in [`probes/`](probes/): `probes/<ID>-probe.spl` returns one row per data source the
+entry reads, marked `OK` or `MISSING`, and `probes/<ID>-probe-rest*.spl` lists the fields a
+REST endpoint returns on your instance. [`probes/README.md`](probes/README.md) walks through
+the general checks (forwarding, role access, component names, field names) in order.
+
 ## Index
 
 | ID | Entry | Section | |

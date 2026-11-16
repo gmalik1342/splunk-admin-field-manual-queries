@@ -8,6 +8,8 @@
     so DateParserVerbose lines come from heavy forwarders or indexers, not
     universal forwarders.
     Query: Main query
+    If this returns nothing, run probes/IX-06-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd component=DateParserVerbose earliest=-24h
 | rex field=_raw

@@ -8,6 +8,8 @@
     forwarder may not be able to send its own logs; if nothing shows up, check
     splunkd.log on the box.
     Query: Main query
+    If this returns nothing, run probes/LF-07-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd component=TcpOutputProc earliest=-4h
     ("blocked" OR "paused" OR "timed out" OR "Cooked connection")

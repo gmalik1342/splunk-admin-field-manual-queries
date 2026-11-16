@@ -6,6 +6,9 @@
     under-replicated buckets.
     Run on: CM.
     Query: Main query
+    If this returns nothing, run probes/CL-03-probe-rest1.spl,
+    probes/CL-03-probe-rest2.spl, probes/CL-03-probe-rest3.spl to confirm the
+    data it reads exists here.
 ```
 | rest splunk_server=local /services/cluster/master/fixup level=search_factor
 | eval fixup_level="search_factor"

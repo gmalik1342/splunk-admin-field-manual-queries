@@ -7,6 +7,8 @@
     Run on: SH, against the _internal of the busy instance (search head,
     cluster manager, deployment server).
     Query: Main query
+    If this returns nothing, run probes/KV-07-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd_access earliest=-4h
     NOT clientip=127.0.0.1 NOT user=splunk-system-user

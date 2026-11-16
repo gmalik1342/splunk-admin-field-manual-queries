@@ -7,6 +7,8 @@
     Run on: SH with all indexers as search peers. dbinspect corruptonly=true
     checks bucket metadata on each peer and returns only the buckets it flags.
     Query: Main query
+    If this returns nothing, run probes/IX-12-probe.spl to confirm the data it
+    reads exists here.
 ```
 | dbinspect index=* corruptonly=true
 | eval bucket_dir=mvindex(split(path, "/"), -1)

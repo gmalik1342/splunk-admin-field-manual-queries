@@ -6,6 +6,8 @@
     much of the quota they are using.
     Run on: SH, and SH-local for current disk use.
     Query: Current dispatch disk use per user (SH-local)
+    If this returns nothing, run probes/SR-10-probe.spl,
+    probes/SR-10-probe-rest.spl to confirm the data it reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 | rest splunk_server=local /services/search/jobs count=0

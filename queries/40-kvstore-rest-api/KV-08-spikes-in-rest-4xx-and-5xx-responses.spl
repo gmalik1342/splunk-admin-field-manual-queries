@@ -6,6 +6,8 @@
     them, and which clients received them.
     Run on: SH, against the _internal of the instance returning errors.
     Query: Main query
+    If this returns nothing, run probes/KV-08-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd_access earliest=-24h status>=400
 | eval uri_norm=mvindex(split(uri, "?"), 0)

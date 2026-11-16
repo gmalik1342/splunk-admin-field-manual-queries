@@ -6,6 +6,8 @@
     Run on: SH. In an SHC, host shows which member the captain assigned the
     job to.
     Query: Main query
+    If this returns nothing, run probes/SR-02-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=scheduler earliest=-24h
     (status=success OR status=skipped OR status=continued OR status=deferred)

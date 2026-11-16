@@ -6,6 +6,8 @@
     send the most expensive requests.
     Run on: SH, against the _internal of the slow instance.
     Query: Main query
+    If this returns nothing, run probes/KV-12-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd_access earliest=-4h
 | rex field=_raw "\s(?<spent_ms>\d+)ms\s*$"

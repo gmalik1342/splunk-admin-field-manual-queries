@@ -6,6 +6,8 @@
     are leaving the largest and longest-lived artifacts.
     Run on: SH-local for the artifact breakdown, SH for the warnings.
     Query: Warnings already raised (SH)
+    If this returns nothing, run probes/SR-05-probe.spl,
+    probes/SR-05-probe-rest.spl to confirm the data it reads exists here.
 ```
 index=_internal sourcetype=splunkd earliest=-7d (log_level=WARN OR log_level=ERROR)
     ("dispatch directory" OR "search artifacts" OR component=DispatchReaper)

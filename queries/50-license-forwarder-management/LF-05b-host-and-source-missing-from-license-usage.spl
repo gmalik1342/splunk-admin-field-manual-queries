@@ -6,6 +6,8 @@
     has squashed those values.
     Run on: SH.
     Query: Fallback attribution from indexer throughput metrics (SH)
+    If this returns nothing, run probes/LF-05-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal source=*metrics.log group=per_host_thruput earliest=-1d@d latest=@d
 | stats sum(kb) as kb by series

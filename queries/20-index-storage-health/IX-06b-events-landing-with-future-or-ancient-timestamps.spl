@@ -8,6 +8,8 @@
     so DateParserVerbose lines come from heavy forwarders or indexers, not
     universal forwarders.
     Query: Indexes already holding future-dated events
+    If this returns nothing, run probes/IX-06-probe.spl to confirm the data it
+    reads exists here.
 ```
 | tstats max(_time) as newest_event where index=* earliest=-1d latest=+10y
     by index sourcetype

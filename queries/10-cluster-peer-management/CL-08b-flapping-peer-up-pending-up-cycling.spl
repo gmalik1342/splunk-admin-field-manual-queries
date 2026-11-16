@@ -5,6 +5,8 @@
     correlate the transitions with heartbeat loss or host resource exhaustion.
     Run on: SH.
     Query: Host pressure on the flapping peer (substitute the peer hostname)
+    If this returns nothing, run probes/CL-08-probe.spl to confirm the data it
+    reads exists here.
     Replace any <angle-bracket> placeholders before running.
 ```
 index=_introspection sourcetype=splunk_resource_usage component=Hostwide

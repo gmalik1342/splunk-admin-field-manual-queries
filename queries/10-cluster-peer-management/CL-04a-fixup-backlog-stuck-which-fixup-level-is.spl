@@ -5,6 +5,8 @@
     which fixup level is stuck and the error preventing progress.
     Run on: CM for the counts, SH for the error signatures.
     Query: Main query
+    If this returns nothing, run probes/CL-04-probe.spl,
+    probes/CL-04-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=local /services/cluster/master/fixup level=generation
 | eval fixup_level="1_generation"

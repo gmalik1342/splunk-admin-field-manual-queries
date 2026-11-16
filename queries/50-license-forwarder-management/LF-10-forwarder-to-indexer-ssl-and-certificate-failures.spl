@@ -9,6 +9,8 @@
     other way, so a forwarder that cannot connect at all must be checked on
     the box.
     Query: Main query
+    If this returns nothing, run probes/LF-10-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd earliest=-24h

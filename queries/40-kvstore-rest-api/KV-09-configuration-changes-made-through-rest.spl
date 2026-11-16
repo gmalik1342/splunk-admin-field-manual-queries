@@ -8,6 +8,8 @@
     changed. Changes made through Splunk Web also go through REST and appear
     here.
     Query: Main query
+    If this returns nothing, run probes/KV-09-probe.spl to confirm the data it
+    reads exists here.
 ```
 index=_internal sourcetype=splunkd_access earliest=-30d
     (method=POST OR method=DELETE)

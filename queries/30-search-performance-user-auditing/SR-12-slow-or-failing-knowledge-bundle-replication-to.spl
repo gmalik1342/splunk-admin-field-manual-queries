@@ -6,6 +6,8 @@
     takes, how large the bundle is, and which peers are failing.
     Run on: SH. host is the search head replicating its bundle.
     Query: Main query
+    If this returns nothing, run probes/SR-12-probe.spl to confirm the data it
+    reads exists here.
     STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd earliest=-24h

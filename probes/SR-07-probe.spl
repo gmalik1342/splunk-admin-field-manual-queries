@@ -1,0 +1,21 @@
+``` Probe for SR-07: checks that the data SR-07 reads exists on this
+    deployment. One row per data source: OK, or MISSING. MISSING means the
+    entry's query cannot see that data here (not forwarded, no access, or a
+    different component name on this version). See Appendix A in the book.
+```
+earliest=-7d
+    (index=_audit sourcetype=audittrail)
+| eval check=mvappend(if(searchmatch("index=_audit sourcetype=audittrail"), "_audit sourcetype=audittrail", null()))
+| mvexpand check
+| stats count as events dc(host) as hosts latest(_time) as last_seen by check
+| append
+    [| makeresults
+     | eval check=split("_audit sourcetype=audittrail", ";")
+     | mvexpand check
+     | eval events=0, hosts=0
+     | fields check events hosts]
+| stats max(events) as events max(hosts) as hosts max(last_seen) as last_seen
+        by check
+| eval status=if(events > 0, "OK", "MISSING")
+| convert ctime(last_seen)
+| table check status events hosts last_seen

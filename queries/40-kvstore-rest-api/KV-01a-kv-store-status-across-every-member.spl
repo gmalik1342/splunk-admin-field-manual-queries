@@ -7,6 +7,8 @@
     Run on: SH-local (or splunk_server=* across the SHC) for current state, SH
     for the history.
     Query: Main query
+    If this returns nothing, run probes/KV-01-probe.spl,
+    probes/KV-01-probe-rest.spl to confirm the data it reads exists here.
 ```
 | rest splunk_server=* /services/kvstore/status count=0
 | rename current.status as status,
