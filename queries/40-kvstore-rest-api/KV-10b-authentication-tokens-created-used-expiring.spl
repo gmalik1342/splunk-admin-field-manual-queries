@@ -9,7 +9,6 @@
     Query: Token creation and deletion history (SH)
     If this returns nothing, run probes/KV-10-probe.spl,
     probes/KV-10-probe-rest.spl to confirm the data it reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd_access earliest=-90d
     (method=POST OR method=DELETE) uri="*/authorization/tokens*"

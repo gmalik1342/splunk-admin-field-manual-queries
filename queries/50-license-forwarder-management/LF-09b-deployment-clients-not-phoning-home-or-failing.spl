@@ -10,7 +10,6 @@
     Query: App install failures reported by clients (SH)
     If this returns nothing, run probes/LF-09-probe.spl to confirm the data it
     reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd earliest=-24h
     (component=DeployedApplication OR component=DeploymentClient

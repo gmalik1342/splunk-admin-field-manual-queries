@@ -8,7 +8,6 @@
     Query: Current captain and last election time (SHC)
     If this returns nothing, run probes/CL-09-probe.spl,
     probes/CL-09-probe-rest.spl to confirm the data it reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 | rest splunk_server=local /services/shcluster/captain/info
 | eval elected_at=strftime(elected_captain,"%F %T"),

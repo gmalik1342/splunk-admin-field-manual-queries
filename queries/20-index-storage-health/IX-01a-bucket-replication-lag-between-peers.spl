@@ -8,7 +8,6 @@
     Query: Main query
     If this returns nothing, run probes/IX-01-probe.spl,
     probes/IX-01-probe-rest.spl to confirm the data it reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal sourcetype=splunkd earliest=-4h
     (component=BucketReplicator OR component=CMRepJob

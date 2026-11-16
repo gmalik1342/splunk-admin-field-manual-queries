@@ -9,7 +9,6 @@
     Query: Lock queue depth (SH)
     If this returns nothing, run probes/KV-05-probe.spl to confirm the data it
     reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_introspection sourcetype=kvstore component=KVStoreServerStats earliest=-4h
 | eval readers='data.globalLock.currentQueue.readers',

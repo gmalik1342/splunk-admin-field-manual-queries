@@ -10,7 +10,6 @@
     Query: Main query
     If this returns nothing, run probes/KV-06-probe.spl to confirm the data it
     reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal earliest=-30d
     ( (sourcetype=splunkd_access (method=POST OR method=DELETE)

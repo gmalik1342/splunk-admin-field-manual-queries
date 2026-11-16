@@ -7,7 +7,6 @@
     Query: Main query
     If this returns nothing, run probes/CL-05-probe.spl,
     probes/CL-05-probe-rest.spl to confirm the data it reads exists here.
-    STATUS: lab verification pending; field or message names may differ on your version.
 ```
 index=_internal earliest=-7d
     ( (sourcetype=splunkd_access method=POST
