@@ -1,9 +1,7 @@
 ``` IX-11 | SmartStore Cache Thrash and Remote Storage Failures
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-11. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: SmartStore searches are slow and peers show constant download
-    activity; detect cache eviction thrash and failed uploads or downloads to
-    the remote object store.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-11-probe.spl to confirm the data it

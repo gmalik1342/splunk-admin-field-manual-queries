@@ -1,9 +1,7 @@
 ``` CL-02 | Which Peer Dropped During a Network Partition
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-02. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Identify which peer node dropped out of the cluster during a
-    network partition, and the exact second the cluster manager marked it
-    Down.
     Run on: SH for the transition history, CM for live heartbeat state.
     Query: Live heartbeat age (CM)
     If this returns nothing, run probes/CL-02-probe.spl,

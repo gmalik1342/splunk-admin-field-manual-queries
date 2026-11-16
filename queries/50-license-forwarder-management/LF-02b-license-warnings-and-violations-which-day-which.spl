@@ -1,9 +1,7 @@
 ``` LF-02 | License Warnings and Violations: Which Day, Which Pool
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-02. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The license manager is showing warnings, or searches are blocked
-    for a license violation; identify the days and pools that went over quota
-    and how close the stack is to a violation.
     Run on: SH for the history, LM for the active messages.
     Query: Messages the LM is currently showing (LM)
     If this returns nothing, run probes/LF-02-probe.spl,

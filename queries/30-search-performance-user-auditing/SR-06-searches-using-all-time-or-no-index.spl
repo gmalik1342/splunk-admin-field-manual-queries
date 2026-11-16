@@ -1,11 +1,8 @@
 ``` SR-06 | Searches Using index=*, All Time, or No Index
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-06. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The indexers are under heavy search load from unscoped queries;
-    find the users running searches with index=*, no index filter at all, or
-    an all-time range.
-    Run on: SH. info=completed events carry total_run_time and scan_count, so
-    the cost of each flagged search is in the same row.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-06-probe.spl to confirm the data it
     reads exists here.

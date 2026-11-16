@@ -1,11 +1,8 @@
 ``` SR-11 | Who Modified, Disabled, or Deleted a Knowledge Object
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-11. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: An alert stopped firing, a lookup was emptied, or a dashboard
-    disappeared; identify who changed or deleted the saved search, lookup,
-    macro, view, or field extraction and when.
-    Run on: SH. In an SHC, the change lands on whichever member served the
-    request, then replicates. host tells you which member the user was on.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-11-probe.spl to confirm the data it
     reads exists here.

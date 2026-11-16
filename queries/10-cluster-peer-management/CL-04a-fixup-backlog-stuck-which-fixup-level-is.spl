@@ -1,8 +1,7 @@
 ``` CL-04 | Fixup Backlog Stuck: Which Fixup Level Is Not Draining
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-04. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Bucket fixup tasks are piling up after a peer outage; determine
-    which fixup level is stuck and the error preventing progress.
     Run on: CM for the counts, SH for the error signatures.
     Query: Main query
     If this returns nothing, run probes/CL-04-probe.spl,

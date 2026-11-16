@@ -1,12 +1,8 @@
 ``` SR-01 | Which User's Search Is Eating Memory and CPU
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-01. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The search head or the indexers are pinned on memory or CPU and
-    splunkd is slow to respond; identify the searches, users, and apps
-    consuming the most resources right now and over the last few hours.
-    Run on: SH, with indexer _introspection forwarded. Indexers record the
-    remote half of each search under the same sid, so totals cover the whole
-    search.
+    Run on: SH, with indexer _introspection forwarded.
     Query: Main query
     If this returns nothing, run probes/SR-01-probe.spl to confirm the data it
     reads exists here.

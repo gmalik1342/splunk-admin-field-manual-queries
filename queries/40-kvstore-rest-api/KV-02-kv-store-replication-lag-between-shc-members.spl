@@ -1,11 +1,8 @@
 ``` KV-02 | KV Store Replication Lag Between SHC Members
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-02. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: KV Store-backed lookups return different results depending on
-    which search head serves the request; measure replication lag across the
-    SHC replica set and identify the stale member.
-    Run on: SH, with _introspection from every SHC member. The KV Store
-    replica set stats are sampled on each member.
+    Run on: SH, with _introspection from every SHC member.
     Query: Main query
     If this returns nothing, run probes/KV-02-probe.spl to confirm the data it
     reads exists here.

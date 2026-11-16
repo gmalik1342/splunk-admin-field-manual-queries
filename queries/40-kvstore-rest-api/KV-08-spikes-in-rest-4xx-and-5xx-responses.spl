@@ -1,9 +1,7 @@
 ``` KV-08 | Spikes in REST 4xx and 5xx Responses
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-08. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Integrations report REST errors or the UI shows intermittent
-    failures; find when 4xx and 5xx responses spiked, which endpoints returned
-    them, and which clients received them.
     Run on: SH, against the _internal of the instance returning errors.
     Query: Main query
     If this returns nothing, run probes/KV-08-probe.spl to confirm the data it

@@ -1,10 +1,8 @@
 ``` SR-12 | Slow or Failing Knowledge Bundle Replication to Peers
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-12. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Searches return stale field extractions or warn that peers have
-    an out-of-date bundle; measure how long knowledge bundle replication
-    takes, how large the bundle is, and which peers are failing.
-    Run on: SH. host is the search head replicating its bundle.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-12-probe.spl to confirm the data it
     reads exists here.

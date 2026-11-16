@@ -1,10 +1,8 @@
 ``` LF-11 | Forwarders Pinned to One Indexer: Uneven Load Balancing
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-11. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Some indexers are much busier than others or fill their disks
-    first; measure how evenly forwarder traffic spreads across the indexers
-    and find forwarders that stick to a single indexer.
-    Run on: SH. host is the receiving indexer; fwd is the forwarder.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-11-probe.spl to confirm the data it
     reads exists here.

@@ -1,9 +1,7 @@
 ``` IX-03 | Hot Bucket Roll Storm
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-03. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: An index is producing thousands of tiny warm buckets, bucket
-    counts are exploding, and search performance on that index is collapsing;
-    identify the roll reason.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-03-probe.spl to confirm the data it

@@ -1,11 +1,8 @@
 ``` KV-05 | Slow KV Store Operations and Lock Contention
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-05. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Lookups against KV Store collections time out or dashboards that
-    use them are slow; find the slow operations, the collections they hit, and
-    whether mongod is queueing on locks.
-    Run on: SH. mongod logs any operation slower than 100 ms by default, so
-    every row here is already slow.
+    Run on: SH.
     Query: Lock queue depth (SH)
     If this returns nothing, run probes/KV-05-probe.spl to confirm the data it
     reads exists here.

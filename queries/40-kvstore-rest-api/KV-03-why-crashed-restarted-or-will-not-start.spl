@@ -1,8 +1,7 @@
 ``` KV-03 | Why mongod Crashed, Restarted, or Will Not Start
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-03. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The KV Store status is failed or stuck in starting after a
-    restart or upgrade; find the reason mongod exited or refused to start.
     Run on: SH, against the _internal of the failing instance.
     Query: Main query
     If this returns nothing, run probes/KV-03-probe.spl to confirm the data it

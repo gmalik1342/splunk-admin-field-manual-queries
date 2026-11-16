@@ -1,11 +1,8 @@
 ``` IX-09 | Silent Index or Sourcetype: Data Stopped Arriving
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-09. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Detect an index/sourcetype pair that normally receives data
-    every hour but has gone quiet, before a downstream alert or dashboard
-    owner notices.
-    Run on: SH. tstats reads only .tsidx metadata, so seven days across all
-    indexes returns in seconds.
+    Run on: SH.
     Query: Main query
 ```
 | tstats count where index=* earliest=-7d@h latest=now

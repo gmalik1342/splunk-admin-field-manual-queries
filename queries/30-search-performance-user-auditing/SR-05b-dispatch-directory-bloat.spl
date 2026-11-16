@@ -1,9 +1,7 @@
 ``` SR-05 | Dispatch Directory Bloat
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-05. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The dispatch directory on the search head is filling the disk or
-    holding thousands of artifacts; identify which users and saved searches
-    are leaving the largest and longest-lived artifacts.
     Run on: SH-local for the artifact breakdown, SH for the warnings.
     Query: Warnings already raised (SH)
     If this returns nothing, run probes/SR-05-probe.spl,

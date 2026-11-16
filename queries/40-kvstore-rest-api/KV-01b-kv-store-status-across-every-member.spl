@@ -1,9 +1,7 @@
 ``` KV-01 | KV Store Status Across Every Member
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-01. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Lookups backed by the KV Store return nothing, apps show KV
-    Store errors, or the bulletin board says the KV Store is not ready; check
-    status on every search head and flag any member not in ready.
     Run on: SH-local (or splunk_server=* across the SHC) for current state, SH
     for the history.
     Query: Status changes over the last week (SH)

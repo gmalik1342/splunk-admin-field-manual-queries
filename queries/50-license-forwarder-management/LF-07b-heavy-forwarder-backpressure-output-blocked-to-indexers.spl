@@ -1,12 +1,8 @@
 ``` LF-07 | Heavy Forwarder Backpressure: Output Blocked to Indexers
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-07. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: A heavy forwarder or intermediate forwarder is falling behind;
-    confirm whether its output to the indexers is blocked, to which
-    destinations, and for how long.
-    Run on: SH, with the forwarder's _internal forwarded. A fully blocked
-    forwarder may not be able to send its own logs; if nothing shows up, check
-    splunkd.log on the box.
+    Run on: SH, with the forwarder's _internal forwarded.
     Query: Output queue fill on the forwarder (SH)
     If this returns nothing, run probes/LF-07-probe.spl to confirm the data it
     reads exists here.

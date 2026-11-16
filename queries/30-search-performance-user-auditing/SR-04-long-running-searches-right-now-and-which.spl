@@ -1,11 +1,8 @@
 ``` SR-04 | Long-Running Searches Right Now, and Which to Kill
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-04. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The cluster is slow at this moment; list every search currently
-    running, how long it has been running, who owns it, and what it is
-    scanning, so the right sid can be cancelled.
-    Run on: SH-local. This shows only jobs dispatched from the search head you
-    are logged into.
+    Run on: SH-local.
     Query: Main query
     If this returns nothing, run probes/SR-04-probe-rest.spl to confirm the
     data it reads exists here.

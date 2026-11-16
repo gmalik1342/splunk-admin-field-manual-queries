@@ -1,12 +1,9 @@
 ``` SR-09 | Failed Logins, Brute Force, and Account Lockouts
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-09. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Detect repeated failed logins against Splunk Web or the REST
-    API, distinguish password spraying from a single brute-forced account, and
-    find locked-out users.
     Run on: SH, and every other Splunk instance that exposes 8000 or 8089
-    (deployment server, cluster manager, heavy forwarders). Each logs its own
-    _audit.
+    (deployment server, cluster manager, heavy forwarders).
     Query: Main query
     If this returns nothing, run probes/SR-09-probe.spl to confirm the data it
     reads exists here.

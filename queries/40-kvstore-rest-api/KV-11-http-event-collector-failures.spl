@@ -1,9 +1,7 @@
 ``` KV-11 | HTTP Event Collector Failures
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-11. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Senders report HEC errors or data from HEC stops arriving; break
-    down HEC failures by reply code, token, and source IP to see whether the
-    problem is the token, the data, or the indexers.
     Run on: SH, against the _internal of the HEC receivers (indexers or heavy
     forwarders behind the load balancer).
     Query: Main query

@@ -1,13 +1,8 @@
 ``` LF-10 | Forwarder-to-Indexer SSL and Certificate Failures
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-10. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Forwarders cannot connect to indexers after a certificate
-    change, or connections drop with TLS errors; classify SSL handshake
-    failures by cause and by the forwarders affected.
-    Run on: SH. Indexer-side errors arrive through the indexers' _internal.
-    Forwarder-side errors only arrive if the forwarder can send its logs some
-    other way, so a forwarder that cannot connect at all must be checked on
-    the box.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-10-probe.spl to confirm the data it
     reads exists here.

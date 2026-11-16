@@ -1,12 +1,8 @@
 ``` IX-06 | Events Landing With Future or Ancient Timestamps
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-06. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Searches over "last 24 hours" miss data, or bucket roll storms
-    appear on an index; locate the sources, hosts, and sourcetypes producing
-    unparseable or out-of-window timestamps.
-    Run on: SH. Parsing happens on the first full Splunk instance in the path,
-    so DateParserVerbose lines come from heavy forwarders or indexers, not
-    universal forwarders.
+    Run on: SH.
     Query: Indexes already holding future-dated events
     If this returns nothing, run probes/IX-06-probe.spl to confirm the data it
     reads exists here.

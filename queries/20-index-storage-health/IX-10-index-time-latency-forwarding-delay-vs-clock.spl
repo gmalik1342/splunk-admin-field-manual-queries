@@ -1,13 +1,8 @@
 ``` IX-10 | Index-Time Latency: Forwarding Delay vs. Clock Drift
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-10. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Real-time alerts are firing late or missing events; quantify the
-    gap between event time and index time per host and sourcetype, and
-    separate pipeline delay from timezone and clock problems.
-    Run on: SH. _index_earliest / _index_latest select events by when they
-    were indexed (last 15 minutes) regardless of their timestamp. The wide
-    earliest / latest stop the event-time window from filtering them out.
-    Replace index=* with a named index first if the environment is large.
+    Run on: SH.
     Query: Main query
 ```
 index=* _index_earliest=-15m@m _index_latest=now earliest=-7d latest=+1d

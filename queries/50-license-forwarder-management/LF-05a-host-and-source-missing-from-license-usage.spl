@@ -1,9 +1,7 @@
 ``` LF-05 | Host and Source Missing From License Usage (Squashing)
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-05. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: License usage reports show large volumes with an empty host or
-    source; recover per-host and per-source attribution when license_usage.log
-    has squashed those values.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-05-probe.spl to confirm the data it

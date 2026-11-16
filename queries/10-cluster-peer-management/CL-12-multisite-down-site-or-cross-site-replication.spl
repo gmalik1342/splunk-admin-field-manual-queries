@@ -1,8 +1,7 @@
 ``` CL-12 | Multisite: Down Site or Cross-Site Replication Imbalance
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-12. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: In a multisite indexer cluster, confirm per-site health and
-    detect a down site or a site carrying a disproportionate share of buckets.
     Run on: CM.
     Query: Main query
     If this returns nothing, run probes/CL-12-probe-rest1.spl,

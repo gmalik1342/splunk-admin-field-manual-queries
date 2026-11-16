@@ -1,12 +1,9 @@
 ``` KV-09 | Configuration Changes Made Through REST
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-09. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: A setting changed without a ticket; trace configuration changes
-    made through the REST API (conf files, inputs, indexes, server settings,
-    app installs) back to the user and client that made them.
     Run on: SH, against the _internal of the instance whose configuration
-    changed. Changes made through Splunk Web also go through REST and appear
-    here.
+    changed.
     Query: Main query
     If this returns nothing, run probes/KV-09-probe.spl to confirm the data it
     reads exists here.

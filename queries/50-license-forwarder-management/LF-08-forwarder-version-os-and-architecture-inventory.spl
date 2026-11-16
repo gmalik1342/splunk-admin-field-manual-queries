@@ -1,12 +1,8 @@
 ``` LF-08 | Forwarder Version, OS, and Architecture Inventory
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-08. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Build an inventory of every forwarder connected to the indexers
-    with its version, OS, and type, to find forwarders on unsupported or
-    vulnerable versions.
-    Run on: SH. Covers every forwarder that connected to an indexer in the
-    last 24 hours. Forwarders that are down are not included (use LF-06 for
-    those).
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-08-probe.spl to confirm the data it
     reads exists here.

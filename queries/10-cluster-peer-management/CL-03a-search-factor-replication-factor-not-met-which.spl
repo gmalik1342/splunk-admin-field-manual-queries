@@ -1,9 +1,7 @@
 ``` CL-03 | Search Factor / Replication Factor Not Met: Which Buckets, Which Peers
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-03. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The cluster manager reports Search Factor or Replication Factor
-    Not Met; identify the affected indexes and the peers that originated the
-    under-replicated buckets.
     Run on: CM.
     Query: Main query
     If this returns nothing, run probes/CL-03-probe-rest1.spl,

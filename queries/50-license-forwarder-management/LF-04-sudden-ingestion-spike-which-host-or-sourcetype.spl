@@ -1,9 +1,7 @@
 ``` LF-04 | Sudden Ingestion Spike: Which Host or Sourcetype
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-04. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: License usage jumped overnight; identify the hosts and
-    sourcetypes whose volume yesterday was far above their normal daily
-    volume.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-04-probe.spl to confirm the data it

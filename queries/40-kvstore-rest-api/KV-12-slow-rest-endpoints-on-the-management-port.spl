@@ -1,9 +1,7 @@
 ``` KV-12 | Slow REST Endpoints on the Management Port
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-12. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Splunk Web pages and REST calls are slow but searches are fine;
-    find which management-port endpoints respond slowest and which callers
-    send the most expensive requests.
     Run on: SH, against the _internal of the slow instance.
     Query: Main query
     If this returns nothing, run probes/KV-12-probe.spl to confirm the data it

@@ -1,12 +1,9 @@
 ``` LF-09 | Deployment Clients Not Phoning Home or Failing App Installs
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-09. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Configuration changes pushed from the deployment server are not
-    reaching some forwarders; find clients that have stopped phoning home and
-    clients that report errors installing deployed apps.
     Run on: DS for the phone-home history (it is in the DS's own
-    splunkd_access). SH for client-side errors, using the forwarders'
-    _internal.
+    splunkd_access).
     Query: App install failures reported by clients (SH)
     If this returns nothing, run probes/LF-09-probe.spl to confirm the data it
     reads exists here.

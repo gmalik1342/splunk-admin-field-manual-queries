@@ -1,11 +1,8 @@
 ``` SR-03 | Scheduler Hitting Its Concurrency Limit
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-03. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Skips are climbing and the scheduler appears saturated; measure
-    actual concurrent scheduled-search load against the limit and find the
-    long-running searches holding the slots.
-    Run on: SH. In an SHC, run against all members; each member enforces its
-    own limit.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-03-probe.spl to confirm the data it
     reads exists here.

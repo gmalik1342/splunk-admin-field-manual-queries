@@ -1,10 +1,14 @@
 # Splunk Administrator Field Manual — SPL Queries
 
+<a href="https://www.amazon.com/dp/B0HRXCT384"><img src="docs/cover.png" alt="Splunk Administrator Field Manual cover" width="220" align="right"></a>
+
+**[Get the book on Amazon](https://www.amazon.com/dp/B0HRXCT384)**
+
 Companion repository for **Splunk Administrator Field Manual: Real-World SPL Recipes for Troubleshooting, Root Cause Analysis, and Cluster Triage** by Gaurav Malik.
 
 Every query from the book, one file per query, ready to paste into the Splunk search bar.
-The printed book explains what each query targets, which fields to read, and how to tell a
-healthy result from a failing one. This repository is the copy-paste supplement.
+These files are the queries only. What each one targets, which fields to read, how a
+healthy result differs from a failing one, and what to check next are in the book.
 
 ## Layout
 
@@ -20,7 +24,7 @@ Entries with more than one query use `a`, `b`, `c` suffixes; `a` is the main que
 ## Using the files
 
 - Each file starts with a comment block (inside triple backticks) giving the entry ID,
-  the use case, and where to run it. SPL inline comments need Splunk 8.0 or later. On older
+  the book entry that explains it, and where to run it. SPL inline comments need Splunk 8.0 or later. On older
   versions, delete the comment block before running.
 - Queries that start with `| rest` must run on the instance named in the "Run on" line,
   usually the cluster manager, license manager, or the search head itself.
@@ -107,8 +111,10 @@ entry ID, your Splunk version, and a sample of the raw event (mask hostnames and
 
 ## License
 
-The SPL queries are released under the MIT License (see `LICENSE`). The book text is not
-included here and remains © 2026 Gaurav Malik. All rights reserved.
+© 2026 Gaurav Malik. The queries and probes are free to use in Splunk environments
+you run or administer, including for an employer or client. Republishing, redistributing, or
+selling them, or building a book, course, app, or add-on from them, needs written permission.
+Quoting a single query with credit and a link is fine. See [`LICENSE`](LICENSE) for the terms.
 
 Splunk® is a registered trademark of its owner. This repository is independent and is not
 affiliated with, endorsed by, or sponsored by Splunk or Cisco.

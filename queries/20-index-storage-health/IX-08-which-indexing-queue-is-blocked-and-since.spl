@@ -1,11 +1,8 @@
 ``` IX-08 | Which Indexing Queue Is Blocked, and Since When
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-08. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Ingest is lagging or forwarders report blocked output; determine
-    which pipeline queue (parsing, aggregation, typing, index) is blocked on
-    which host, and how long it has been saturated.
-    Run on: SH. Works for indexers and heavy forwarders, since both write
-    metrics.log every 30 seconds.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-08-probe.spl to confirm the data it
     reads exists here.

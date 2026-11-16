@@ -1,12 +1,8 @@
 ``` LF-03 | License Peer Cannot Reach the License Manager
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-03. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: An indexer or search head shows a license bulletin about being
-    unable to contact the license manager; identify which instances are not
-    checking in and since when.
-    Run on: SH. host is the license peer that cannot reach the LM. The peer
-    has to forward its _internal somewhere you can search; if it cannot reach
-    anything, check splunkd.log on the host directly.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-03-probe.spl to confirm the data it
     reads exists here.

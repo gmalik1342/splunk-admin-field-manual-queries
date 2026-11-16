@@ -1,11 +1,8 @@
 ``` CL-11 | SHC Deployer Push Audit
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-11. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Audit who ran apply shcluster-bundle, when, and which SHC
-    members failed to take the push.
-    Run on: DEP for the PUSH_REQUEST rows. The deployer is usually not an
-    indexer-cluster search peer, so its _internal must be forwarded or you
-    will see member rows only.
+    Run on: DEP for the PUSH_REQUEST rows.
     Query: Main query
     If this returns nothing, run probes/CL-11-probe.spl to confirm the data it
     reads exists here.

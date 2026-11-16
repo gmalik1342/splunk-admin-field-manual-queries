@@ -1,8 +1,7 @@
 ``` CL-08 | Flapping Peer: Up → Pending → Up Cycling
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-08. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: A peer repeatedly cycles between Up, Pending, and Down;
-    correlate the transitions with heartbeat loss or host resource exhaustion.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/CL-08-probe.spl to confirm the data it

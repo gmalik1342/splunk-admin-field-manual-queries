@@ -1,11 +1,8 @@
 ``` LF-01 | Daily License Usage by Index, Sourcetype, and Host vs. Quota
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-01. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Report daily license consumption against the pool quota and
-    identify which indexes, sourcetypes, and hosts account for it.
-    Run on: SH for usage, LM for the | rest quota join. If the join returns no
-    quota_gb, the search head cannot reach the LM's REST endpoints. Run on the
-    LM instead.
+    Run on: SH for usage, LM for the | rest quota join.
     Query: Main query
     If this returns nothing, run probes/LF-01-probe.spl,
     probes/LF-01-probe-rest.spl to confirm the data it reads exists here.

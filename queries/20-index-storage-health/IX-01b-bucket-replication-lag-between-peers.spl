@@ -1,9 +1,7 @@
 ``` IX-01 | Bucket Replication Lag Between Peers
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-01. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Replication fixups are not draining and peers report replication
-    timeouts; measure where bucket replication is failing or slow and which
-    source-to-target link is responsible.
     Run on: SH for link errors, CM for the streaming backlog.
     Query: Streaming backlog per target (CM)
     If this returns nothing, run probes/IX-01-probe.spl,

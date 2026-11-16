@@ -1,11 +1,8 @@
 ``` SR-08 | Role and Capability Changes: Privilege Escalation
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-08. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Identify who created or modified users and roles, and which
-    accounts currently hold capabilities that allow privilege escalation.
-    Run on: SH for the change history. SH-local for current capabilities. In
-    an SHC, user and role changes replicate, so one member's view is enough
-    for the capability list.
+    Run on: SH for the change history.
     Query: Main query
     If this returns nothing, run probes/SR-08-probe.spl,
     probes/SR-08-probe-rest.spl to confirm the data it reads exists here.

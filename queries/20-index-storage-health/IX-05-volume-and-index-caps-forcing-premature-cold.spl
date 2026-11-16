@@ -1,9 +1,7 @@
 ``` IX-05 | Volume and Index Caps Forcing Premature Cold-to-Frozen
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-05. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Compare configured retention to actual retention for every index
-    on every peer to find indexes whose size or volume caps are cutting data
-    off early.
     Run on: SH with all indexers as search peers (splunk_server=* fans the
     REST call out to them).
     Query: Main query

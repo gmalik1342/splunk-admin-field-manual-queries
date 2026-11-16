@@ -1,9 +1,7 @@
 ``` CL-07 | Peer Stuck in Decommissioning After offline --enforce-counts
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-07. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: A peer was taken offline with splunk offline --enforce-counts
-    and has sat in Decommissioning for hours; determine what is blocking
-    completion.
     Run on: SH for the duration, CM for the blockers.
     Query: Main query
     If this returns nothing, run probes/CL-07-probe.spl,

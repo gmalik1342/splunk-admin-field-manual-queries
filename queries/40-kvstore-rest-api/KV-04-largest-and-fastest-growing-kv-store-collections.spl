@@ -1,9 +1,7 @@
 ``` KV-04 | Largest and Fastest-Growing KV Store Collections
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-04. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The KV Store data directory is growing, initial sync takes
-    hours, or memory use on the search head keeps climbing; rank collections
-    by size and by growth over the last week.
     Run on: SH, against the KV Store captain's _introspection (sizes are the
     same on every member once replicated).
     Query: Main query

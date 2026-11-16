@@ -1,9 +1,7 @@
 ``` IX-04 | Partition Approaching minFreeSpace: Indexing About to Pause
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-04. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Warn before splunkd pauses indexing on a peer because a
-    partition is approaching the minFreeSpace threshold, and confirm whether
-    indexing has already stopped.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-04-probe.spl to confirm the data it

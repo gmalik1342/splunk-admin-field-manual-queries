@@ -1,9 +1,7 @@
 ``` CL-09 | Search Head Cluster Captain Election Churn
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-09. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: SHC captaincy keeps moving between members, scheduled searches
-    are being skipped during handoffs, and the cause of the elections needs to
-    be found.
     Run on: SHC member.
     Query: Current captain and last election time (SHC)
     If this returns nothing, run probes/CL-09-probe.spl,

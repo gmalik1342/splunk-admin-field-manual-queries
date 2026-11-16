@@ -1,10 +1,8 @@
 ``` SR-02 | Skipped Scheduled Searches and Why
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-02. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Alerts did not fire and reports are missing runs; list every
-    skipped scheduled search with its skip reason, owning app, and skip ratio.
-    Run on: SH. In an SHC, host shows which member the captain assigned the
-    job to.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-02-probe.spl to confirm the data it
     reads exists here.

@@ -1,11 +1,8 @@
 ``` IX-12 | Corrupt Buckets, tsidx Errors, and Failed Rebuilds
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-12. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Searches return errors about unreadable buckets or tsidx files,
-    or a thawed bucket failed to rebuild; list every corrupt bucket by peer
-    and index so they can be repaired with fsck.
-    Run on: SH with all indexers as search peers. dbinspect corruptonly=true
-    checks bucket metadata on each peer and returns only the buckets it flags.
+    Run on: SH with all indexers as search peers.
     Query: Error trail behind the corruption (SH)
     If this returns nothing, run probes/IX-12-probe.spl to confirm the data it
     reads exists here.

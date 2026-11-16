@@ -1,11 +1,8 @@
 ``` LF-12 | Forwarder Throughput Throttling and Parsing Bottlenecks
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-12. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: A forwarder is falling behind on its files with no errors;
-    confirm whether it is throttled by maxKBps, and on heavy forwarders, find
-    which parsing processor is consuming the most CPU.
-    Run on: SH, with the forwarders' _internal forwarded. Replace <heavy_fwd>
-    with the forwarder's hostname.
+    Run on: SH, with the forwarders' _internal forwarded.
     Query: CPU per pipeline processor on a heavy forwarder (SH)
     If this returns nothing, run probes/LF-12-probe.spl to confirm the data it
     reads exists here.

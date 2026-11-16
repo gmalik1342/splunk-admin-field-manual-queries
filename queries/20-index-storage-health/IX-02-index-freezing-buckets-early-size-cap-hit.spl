@@ -1,9 +1,7 @@
 ``` IX-02 | Index Freezing Buckets Early: Size Cap Hit Before Retention
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-02. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Users report data missing well inside the documented retention
-    window; confirm whether an index is freezing buckets because it hit
-    maxTotalDataSizeMB instead of aging out on frozenTimePeriodInSecs.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-02-probe.spl to confirm the data it

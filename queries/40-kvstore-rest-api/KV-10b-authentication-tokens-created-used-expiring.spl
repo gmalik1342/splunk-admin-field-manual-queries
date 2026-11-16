@@ -1,11 +1,8 @@
 ``` KV-10 | Authentication Tokens: Created, Used, Expiring
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-10. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Audit Splunk authentication tokens: who created them, which are
-    unused or never expire, which belong to disabled users, and when each was
-    last used.
-    Run on: SH-local. Tokens are stored per instance; in an SHC they replicate
-    across members.
+    Run on: SH-local.
     Query: Token creation and deletion history (SH)
     If this returns nothing, run probes/KV-10-probe.spl,
     probes/KV-10-probe-rest.spl to confirm the data it reads exists here.

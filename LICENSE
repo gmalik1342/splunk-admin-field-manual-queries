@@ -1,21 +1,30 @@
-MIT License
+Copyright (c) 2026 Gaurav Malik. All rights reserved.
 
-Copyright (c) 2026 Gaurav Malik
+The SPL queries, probes, and other files in this repository (the "Queries") accompany
+the book "Splunk Administrator Field Manual" by Gaurav Malik (https://www.amazon.com/dp/B0HRXCT384).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Permitted use. You may copy, run, and modify the Queries, free of charge, for use in
+   Splunk environments that you operate or administer, including on behalf of your
+   employer or a client. You may share copies, modified or not, inside that organization.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Quotation. You may quote an individual query in an article, blog post, forum answer,
+   or internal document, provided you credit the book and link to this repository.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. Not permitted without prior written permission from the author:
+   a. republishing, redistributing, or mirroring the Queries, in whole or in substantial
+      part, in any public place, including websites, repositories, package registries,
+      and app stores;
+   b. selling the Queries or including them in any paid product, service, course,
+      training material, app, or add-on;
+   c. compiling the Queries, or a substantial part of them, into another collection,
+      book, or course.
+
+4. No warranty. The Queries are provided "as is", without warranty of any kind. Splunk
+   versions and deployments differ; test every query before relying on it. The author is
+   not liable for any outage, data loss, license overage, or other damage arising from
+   their use.
+
+Permission requests: open an issue in this repository.
+
+Splunk is a registered trademark of its owner. This repository is independent and is not
+affiliated with, endorsed by, or sponsored by Splunk or Cisco.

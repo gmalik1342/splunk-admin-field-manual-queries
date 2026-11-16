@@ -1,11 +1,8 @@
 ``` LF-06 | Forwarders That Stopped Sending Data
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry LF-06. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Data from some systems is missing; list forwarders that were
-    connected to the indexers recently but have not been seen since, with
-    their last contact time.
-    Run on: SH. Indexers log every forwarder connection every 30 seconds, so a
-    forwarder missing for 15 minutes has missed about 30 reports.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/LF-06-probe.spl to confirm the data it
     reads exists here.

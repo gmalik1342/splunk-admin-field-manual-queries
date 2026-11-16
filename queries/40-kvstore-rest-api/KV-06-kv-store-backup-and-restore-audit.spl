@@ -1,12 +1,9 @@
 ``` KV-06 | KV Store Backup and Restore Audit
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-06. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Confirm who ran a KV Store backup or restore, when, and whether
-    it finished, especially after collections lost data or reverted to old
-    contents.
     Run on: SH, against the _internal of the instance where the backup or
-    restore ran. splunk backup kvstore and splunk restore kvstore call the
-    REST endpoints shown in the REQUEST rows, so CLI and REST use both appear.
+    restore ran.
     Query: Main query
     If this returns nothing, run probes/KV-06-probe.spl to confirm the data it
     reads exists here.

@@ -1,9 +1,7 @@
 ``` IX-07 | Line-Breaking and Truncation Errors per Sourcetype
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry IX-07. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Events are being cut off mid-record or multiple records are
-    merged into one event; identify which sourcetypes are hitting TRUNCATE or
-    MAX_EVENTS limits and from which hosts.
     Run on: SH.
     Query: Main query
     If this returns nothing, run probes/IX-07-probe.spl to confirm the data it

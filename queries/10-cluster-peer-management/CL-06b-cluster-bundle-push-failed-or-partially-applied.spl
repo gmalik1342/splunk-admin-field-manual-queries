@@ -1,8 +1,7 @@
 ``` CL-06 | Cluster Bundle Push Failed or Partially Applied
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-06. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Trace a failed or partially applied apply cluster-bundle to the
-    peer that rejected it and the validation error it threw.
     Run on: SH for the error timeline, CM for the per-peer sync state.
     Query: Per-peer bundle sync state (CM)
     If this returns nothing, run probes/CL-06-probe.spl,

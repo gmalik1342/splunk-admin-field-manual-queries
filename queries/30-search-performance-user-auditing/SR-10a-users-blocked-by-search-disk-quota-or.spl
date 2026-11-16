@@ -1,9 +1,7 @@
 ``` SR-10 | Users Blocked by Search Disk Quota or Concurrency Limits
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-10. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Users report searches refusing to run with quota errors;
-    identify which users are hitting srchDiskQuota or srchJobsQuota and how
-    much of the quota they are using.
     Run on: SH, and SH-local for current disk use.
     Query: Main query
     If this returns nothing, run probes/SR-10-probe.spl,

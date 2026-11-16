@@ -1,9 +1,7 @@
 ``` KV-07 | REST API Traffic by User, Client, and Endpoint
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry KV-07. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: The management port is busy and splunkd is slow to answer;
-    profile REST API traffic to see which users, client IPs, and endpoints
-    generate the load.
     Run on: SH, against the _internal of the busy instance (search head,
     cluster manager, deployment server).
     Query: Main query

@@ -1,10 +1,8 @@
 ``` SR-07 | Dangerous Search Commands: delete, script, sendemail, outputlookup, collect, map
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry SR-07. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Audit who ran search commands that destroy data, run code, send
-    data out of Splunk, or overwrite lookups and summary indexes.
-    Run on: SH. The join resolves each user's current roles from the search
-    head you run it on.
+    Run on: SH.
     Query: Main query
     If this returns nothing, run probes/SR-07-probe.spl,
     probes/SR-07-probe-rest.spl to confirm the data it reads exists here.

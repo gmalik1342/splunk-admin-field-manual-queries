@@ -1,8 +1,7 @@
 ``` CL-05 | Maintenance Mode Audit: Who, When, Still On?
-    Splunk Administrator Field Manual - Gaurav Malik
+    Interpretation and RCA: Splunk Administrator Field Manual (Gaurav Malik),
+    entry CL-05. https://www.amazon.com/dp/B0HRXCT384
 
-    Use case: Audit who enabled cluster maintenance mode, when it was set, and
-    whether it was left on after the change window closed.
     Run on: SH for the history, CM for the current state.
     Query: Current state (CM)
     If this returns nothing, run probes/CL-05-probe.spl,
