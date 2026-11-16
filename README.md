@@ -27,7 +27,6 @@ Entries with more than one query use `a`, `b`, `c` suffixes; `a` is the main que
 - Replace anything in `<angle brackets>` (for example `<peer_host>`) with your own values.
 - Start with the short time ranges in the queries. Internal indexes are large.
 
-> ⚠ 19 entries are marked for lab verification: CL-01, CL-05, CL-09, CL-11, IX-01, IX-02, IX-11, SR-10, SR-12, KV-02, KV-03, KV-04, KV-05, KV-06, KV-10, KV-11, LF-03, LF-09, LF-10. Their field or log-message names may differ on some Splunk versions. Corrections are welcome as issues.
 
 ## When a query returns nothing
 
