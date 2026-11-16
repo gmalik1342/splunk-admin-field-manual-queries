@@ -62,4 +62,4 @@ An error means the endpoint does not exist on this instance. Usually the query i
 
 ## Ready-made probes
 
-The companion repository has a probe for every entry (`probes/<ID>-probe.spl`). It checks each data source the entry reads and returns one row per source marked `OK` or `MISSING`, plus a field listing for every REST endpoint the entry calls. The table below lists the same data sources for use offline.
+The companion repository ({{repo_url}}) has a probe for every entry (`probes/<ID>-probe.spl`). It checks each data source the entry reads and returns one row per source marked `OK` or `MISSING`, plus a field listing for every REST endpoint the entry calls. The table below lists the same data sources for use offline.

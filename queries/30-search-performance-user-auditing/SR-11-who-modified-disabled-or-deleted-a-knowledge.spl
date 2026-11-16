@@ -32,7 +32,8 @@ index=_internal sourcetype=splunkd_access earliest=-30d
        ko_name=urldecode(mvindex(parts, depth)),
        sub_action=mvindex(parts, depth + 1)
 | eval change=case(method="DELETE", "DELETE",
-                   sub_action="disable", "DISABLE", sub_action="enable", "ENABLE",
+                   sub_action="disable", "DISABLE",
+                   sub_action="enable", "ENABLE",
                    sub_action="acl", "PERMISSIONS",
                    isnull(ko_name), "CREATE", true(), "MODIFY")
 | where status < 400

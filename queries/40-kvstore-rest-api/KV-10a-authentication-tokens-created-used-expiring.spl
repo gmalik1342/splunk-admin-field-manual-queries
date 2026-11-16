@@ -15,7 +15,8 @@
          claims.iat as iat, title as token_id
 | eval created=strftime(iat, "%F"),
        expires=if(exp=0 OR isnull(exp), "NEVER", strftime(exp, "%F")),
-       days_left=if(exp=0 OR isnull(exp), null(), round((exp - now()) / 86400, 0)),
+       days_left=if(exp=0 OR isnull(exp), null(),
+                    round((exp - now()) / 86400, 0)),
        last_used_days=if(isnull(lastUsed) OR lastUsed=0, null(),
                          round((now() - lastUsed) / 86400, 0)),
        flag=case(status="disabled", "disabled",

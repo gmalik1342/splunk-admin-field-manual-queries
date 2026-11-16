@@ -10,7 +10,8 @@
     If this returns nothing, run probes/KV-05-probe.spl to confirm the data it
     reads exists here.
 ```
-index=_introspection sourcetype=kvstore component=KVStoreServerStats earliest=-4h
+index=_introspection sourcetype=kvstore component=KVStoreServerStats
+    earliest=-4h
 | eval readers='data.globalLock.currentQueue.readers',
        writers='data.globalLock.currentQueue.writers',
        conns='data.connections.current'

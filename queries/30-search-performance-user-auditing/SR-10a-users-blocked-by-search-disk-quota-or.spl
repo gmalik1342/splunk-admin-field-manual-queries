@@ -16,9 +16,9 @@ index=_internal earliest=-24h
      OR sourcetype=splunk_search_messages)
 | rex field=_raw "(?i)user[=:\s]+\"?(?<quota_user>[\w.@-]+)"
 | eval quota_user=coalesce(quota_user, user),
-       quota=case(match(_raw, "(?i)disk"), "DISK (srchDiskQuota)",
-                  match(_raw, "(?i)role|user"), "USER/ROLE JOBS (srchJobsQuota)",
-                  true(), "INSTANCE CONCURRENCY")
+       quota=case(match(_raw, "(?i)disk"),      "DISK (srchDiskQuota)",
+                  match(_raw, "(?i)role|user"), "ROLE JOBS (srchJobsQuota)",
+                  true(),                       "INSTANCE CONCURRENCY")
 | stats count as blocked latest(_time) as last_blocked by quota_user quota
 | convert ctime(last_blocked)
 | sort - blocked

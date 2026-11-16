@@ -20,7 +20,7 @@ index=_internal sourcetype=splunkd earliest=-72h
 | eval cause=case(
     match(msg, "(?i)connect|unreachable|timed out|refused"), "NETWORK",
     match(msg, "(?i)ssl|certificate|handshake"),             "TLS",
-    match(msg, "(?i)auth|pass4SymmKey|unauthorized"),        "AUTH (pass4SymmKey)",
+    match(msg, "(?i)auth|pass4SymmKey|unauthoriz"),          "AUTH",
     match(msg, "(?i)expired|invalid license"),               "LICENSE FILE",
     true(),                                                  "OTHER")
 | stats count earliest(_time) as first_seen latest(_time) as last_seen

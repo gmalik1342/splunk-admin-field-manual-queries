@@ -11,7 +11,8 @@
     If this returns nothing, run probes/LF-09-probe.spl to confirm the data it
     reads exists here.
 ```
-index=_internal sourcetype=splunkd_access uri="*/broker/phonehome/*" earliest=-7d
+index=_internal sourcetype=splunkd_access uri="*/broker/phonehome/*"
+    earliest=-7d
 | eval ph=split(mvindex(split(uri, "connection_"), 1), "_")
 | eval client_ip=mvindex(ph, 0), client_host=mvindex(ph, 2),
        client_name=mvindex(ph, 3)

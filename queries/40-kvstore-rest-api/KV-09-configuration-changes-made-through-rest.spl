@@ -21,7 +21,8 @@ index=_internal sourcetype=splunkd_access earliest=-30d
 | eval path=mvindex(split(uri, "?"), 0)
 | rex field=path "/(?:configs/conf-|properties/)(?<conf_file>[^/]+)"
 | rex field=path "/(?:configs/conf-|properties/)[^/]+/(?<stanza>[^/]+)"
-| rex field=path "/data/(?<data_area>inputs/[^/]+|indexes)(?:/(?<data_obj>[^/]+))?"
+| rex field=path
+    "/data/(?<data_area>inputs/[^/]+|indexes)(?:/(?<data_obj>[^/]+))?"
 | rex field=path "/apps/(?:local|appinstall)(?:/(?<app_name>[^/]+))?"
 | eval target=case(isnotnull(conf_file), conf_file . ".conf",
                    isnotnull(data_area), data_area,

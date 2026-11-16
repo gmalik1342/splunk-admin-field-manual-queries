@@ -13,7 +13,8 @@
 index=_internal sourcetype=splunkd_access earliest=-4h
     NOT clientip=127.0.0.1 NOT user=splunk-system-user
 | eval uri_norm=mvindex(split(uri, "?"), 0)
-| eval uri_norm=replace(uri_norm, "/servicesNS/[^/]+/[^/]+/", "/servicesNS/-/-/")
+| eval uri_norm=replace(uri_norm, "/servicesNS/[^/]+/[^/]+/",
+    "/servicesNS/-/-/")
 | eval uri_norm=replace(uri_norm, "/search/jobs/[^/]+", "/search/jobs/<sid>")
 | eval uri_norm=replace(uri_norm, "[0-9a-fA-F-]{36}", "<guid>")
 | rex field=_raw "\s(?<spent_ms>\d+)ms\s*$"

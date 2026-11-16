@@ -13,7 +13,8 @@ index=_internal sourcetype=splunkd earliest=-4h
     (component=BucketReplicator OR component=CMRepJob
      OR component=CMReplicationRegistry OR component=RawdataHashMarkReader)
     (log_level=WARN OR log_level=ERROR)
-| rex field=_raw "(?:ip|target_ip|peer_ip)=(?<target_ip>\d{1,3}(?:\.\d{1,3}){3})"
+| rex field=_raw
+    "(?:ip|target_ip|peer_ip)=(?<target_ip>\d{1,3}(?:\.\d{1,3}){3})"
 | rex field=_raw "\]\s+-\s+(?<msg>.+)$"
 | eval msg_sig=replace(msg, "\S+~\d+~[0-9A-F-]+", "BUCKET")
 | eval msg_sig=replace(msg_sig, "[0-9a-fA-F-]{16,}", "GUID")

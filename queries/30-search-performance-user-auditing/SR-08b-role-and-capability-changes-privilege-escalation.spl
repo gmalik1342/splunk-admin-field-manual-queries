@@ -12,9 +12,10 @@
 ```
 | rest splunk_server=local /services/authorization/roles count=0
 | eval caps=mvappend(capabilities, imported_capabilities)
-| eval risky=mvfilter(in(caps, "admin_all_objects", "edit_roles", "edit_user",
-                          "change_authentication", "can_delete", "edit_tokens_all",
-                          "install_apps", "edit_authentication_extensions"))
+| eval risky=mvfilter(in(caps, "admin_all_objects", "edit_roles",
+                          "edit_user", "change_authentication", "can_delete",
+                          "edit_tokens_all", "install_apps",
+                          "edit_authentication_extensions"))
 | where isnotnull(risky)
 | rename title as role
 | table role risky imported_roles

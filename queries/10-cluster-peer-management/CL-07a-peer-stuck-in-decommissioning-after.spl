@@ -10,7 +10,8 @@
     probes/CL-07-probe-rest1.spl, probes/CL-07-probe-rest2.spl to confirm the
     data it reads exists here.
 ```
-index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-48h
+index=_internal sourcetype=splunkd component=CMPeer "transitioning"
+    earliest=-48h
 | rex field=_raw "peer_name=(?<peer_name>\S+)"
 | rex field=_raw "from=(?<from_state>\w+)\s+to=(?<to_state>\w+)"
 | where to_state="Decommissioning" OR from_state="Decommissioning"
@@ -19,6 +20,7 @@ index=_internal sourcetype=splunkd component=CMPeer "transitioning" earliest=-48
         latest(to_state) as last_state
         by peer_name
 | eval hours_in_decom=round((coalesce(exited,now())-entered)/3600,2),
-       outcome=if(isnull(exited),"STILL DECOMMISSIONING","EXITED -> ".last_state)
+       outcome=if(isnull(exited), "STILL DECOMMISSIONING",
+                  "EXITED -> " . last_state)
 | convert ctime(entered) ctime(exited)
 | table peer_name entered exited hours_in_decom outcome

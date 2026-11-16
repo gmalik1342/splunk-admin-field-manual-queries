@@ -12,5 +12,6 @@
 | rest splunk_server=local /services/shcluster/captain/info
 | eval elected_at=strftime(elected_captain,"%F %T"),
     minutes_since_election=round((now()-elected_captain)/60,1)
-| table label elected_at minutes_since_election dynamic_captain service_ready_flag
+| table label elected_at minutes_since_election dynamic_captain
+    service_ready_flag
     rolling_restart_flag

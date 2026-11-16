@@ -18,6 +18,7 @@
        pct_of_buckets=round(100*buckets/cluster_buckets,1)
 | appendcols
     [| rest splunk_server=local /services/cluster/config
-     | table site_replication_factor site_search_factor available_sites multisite]
+     | table site_replication_factor site_search_factor available_sites
+         multisite]
 | table site peers peers_up pct_peers_up peers_searchable buckets pct_of_buckets
         site_replication_factor site_search_factor available_sites

@@ -9,7 +9,8 @@
     If this returns nothing, run probes/LF-05-probe.spl to confirm the data it
     reads exists here.
 ```
-index=_internal source=*metrics.log group=per_host_thruput earliest=-1d@d latest=@d
+index=_internal source=*metrics.log group=per_host_thruput earliest=-1d@d
+    latest=@d
 | stats sum(kb) as kb by series
 | eval gb=round(kb / 1024 / 1024, 2)
 | rename series as host
